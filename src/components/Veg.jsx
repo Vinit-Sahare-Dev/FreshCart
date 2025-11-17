@@ -8,7 +8,7 @@ function Veg() {
       name: 'Paneer Butter Masala',
       description: 'Cottage cheese in rich tomato gravy with butter',
       price: 280,
-      image: '/public/veg/paneer-butter-masala.jpg',
+      image: 'public/veg/paneer-butter-masala.jpg',
       fallback: '🧀',
       rating: 4.5,
       cookTime: '25 min'
@@ -18,7 +18,7 @@ function Veg() {
       name: 'Vegetable Biryani',
       description: 'Fragrant basmati rice with mixed vegetables and spices',
       price: 220,
-      image: '/public/veg/vegbiryani.jpg',
+      image: 'public/veg/vegbiryani.jpg',
       fallback: '🍚',
       rating: 4.3,
       cookTime: '30 min'
@@ -28,18 +28,17 @@ function Veg() {
       name: 'Palak Paneer',
       description: 'Cottage cheese in creamy spinach gravy',
       price: 260,
-      image: '/public/veg/palak-paneer.jpg',
+      image: 'public/veg/palak-paneer.jpg',
       fallback: '🥬',
       rating: 4.4,
       cookTime: '20 min'
     },
- 
     {
-    id: 4,
+      id: 4,
       name: 'Masala Dosa',
       description: 'Crispy rice crepe with spiced potato filling',
       price: 120,
-      image: '/public/veg/masala-dosa.jpg',
+      image: 'public/veg/masala-dosa.jpg',
       fallback: '🥞',
       rating: 4.7,
       cookTime: '10 min'
@@ -49,7 +48,7 @@ function Veg() {
       name: 'Chole Bhature',
       description: 'Spicy chickpeas with fluffy fried bread',
       price: 180,
-      image: '/public/veg/chole-bhature.jpg',
+      image: 'public/veg/chole-bhature.jpg',
       fallback: '🥘',
       rating: 4.6,
       cookTime: '15 min'
@@ -59,7 +58,7 @@ function Veg() {
       name: 'Vegetable Korma',
       description: 'Mixed vegetables in rich cashew gravy',
       price: 240,
-      image: '/public/veg/vegkorma.jpg',
+      image: 'public/veg/vegkorma.jpg',
       fallback: '🥗',
       rating: 4.2,
       cookTime: '25 min'
@@ -69,7 +68,7 @@ function Veg() {
       name: 'Aloo Gobi',
       description: 'Potato and cauliflower cooked with Indian spices',
       price: 160,
-      image: '/public/veg/aloo-gobi.jpg',
+      image: 'public/veg/aloo-gobi.jpg',
       fallback: '🥔',
       rating: 4.1,
       cookTime: '20 min'
@@ -79,7 +78,7 @@ function Veg() {
       name: 'Baingan Bharta',
       description: 'Smoky roasted eggplant mashed with spices',
       price: 190,
-      image: '/public/veg/baingan-bharta.jpg',
+      image: 'public/veg/baingan-bharta.jpg',
       fallback: '🍆',
       rating: 4.3,
       cookTime: '25 min'
@@ -89,7 +88,7 @@ function Veg() {
       name: 'Malai Kofta',
       description: 'Creamy vegetable dumplings in rich gravy',
       price: 290,
-      image: '/public/veg/malai-kofta.jpg',
+      image: 'public/veg/malai-kofta.jpg',
       fallback: '🍡',
       rating: 4.6,
       cookTime: '30 min'
@@ -99,7 +98,7 @@ function Veg() {
       name: 'Dal Makhani',
       description: 'Creamy black lentils simmered overnight',
       price: 200,
-      image: '/public/veg/dal-makhani.jpg',
+      image: 'public/veg/dal-makhani.jpg',
       fallback: '🫘',
       rating: 4.5,
       cookTime: '15 min'
@@ -109,7 +108,7 @@ function Veg() {
       name: 'Mutter Paneer',
       description: 'Cottage cheese with green peas in tomato gravy',
       price: 250,
-      image: '/public/veg/mutter-paneer.jpg',
+      image: 'public/veg/mutter-paneer.jpg',
       fallback: '🧀',
       rating: 4.4,
       cookTime: '20 min'
@@ -119,7 +118,7 @@ function Veg() {
       name: 'Vegetable Jalfrezi',
       description: 'Stir-fried vegetables in spicy tomato sauce',
       price: 210,
-      image: '/public/veg/veg-jalfrezi.jpg',
+      image: 'public/veg/veg-jalfrezi.jpg',
       fallback: '🥘',
       rating: 4.2,
       cookTime: '18 min'
@@ -129,7 +128,7 @@ function Veg() {
       name: 'Rajma Masala',
       description: 'Kidney beans in rich onion-tomato gravy',
       price: 170,
-      image: '/public/veg/rajma-masala.jpg',
+      image: 'public/veg/rajma-masala.jpg',
       fallback: '🫘',
       rating: 4.3,
       cookTime: '20 min'
@@ -139,7 +138,7 @@ function Veg() {
       name: 'Gobi Manchurian',
       description: 'Crispy cauliflower in tangy Chinese sauce',
       price: 190,
-      image: '/public/veg/gobi-manchurian.jpg',
+      image: 'public/veg/gobi-manchurian.jpg',
       fallback: '🥦',
       rating: 4.5,
       cookTime: '15 min'
@@ -149,7 +148,7 @@ function Veg() {
       name: 'Paneer Tikka',
       description: 'Grilled cottage cheese cubes with spices',
       price: 270,
-      image: '/public/veg/paneer-tikka.jpg',
+      image: 'public/veg/paneer-tikka.jpg',
       fallback: '🔥',
       rating: 4.7,
       cookTime: '12 min'
@@ -159,7 +158,7 @@ function Veg() {
       name: 'Vegetable Pulao',
       description: 'Fragrant rice with assorted vegetables',
       price: 150,
-      image: '/public/veg/veg-pulao.jpg',
+      image: 'public/veg/veg-pulao.jpg',
       fallback: '🍚',
       rating: 4.2,
       cookTime: '15 min'
@@ -169,7 +168,7 @@ function Veg() {
       name: 'Aloo Matar',
       description: 'Potatoes and peas in spicy gravy',
       price: 140,
-      image: '/public/veg/aloo-matar.jpg',
+      image: 'public/veg/aloo-matar.jpg',
       fallback: '🥔',
       rating: 4.0,
       cookTime: '18 min'
@@ -179,7 +178,7 @@ function Veg() {
       name: 'Bhindi Masala',
       description: 'Okra cooked with onions and spices',
       price: 160,
-      image: '/public/veg/bhindi-masala.jpg',
+      image: 'public/veg/bhindi-masala.jpg',
       fallback: '🥬',
       rating: 4.3,
       cookTime: '15 min'
@@ -189,7 +188,7 @@ function Veg() {
       name: 'Mushroom Matar',
       description: 'Mushrooms and peas in creamy gravy',
       price: 230,
-      image: '/public/veg/mushroom-matar.jpg',
+      image: 'public/veg/mushroom-matar.jpg',
       fallback: '🍄',
       rating: 4.4,
       cookTime: '20 min'
@@ -199,7 +198,7 @@ function Veg() {
       name: 'Vegetable Handi',
       description: 'Mixed vegetables cooked in clay pot',
       price: 260,
-      image: '/public/veg/veg-handi.jpg',
+      image: 'public/veg/veg-handi.jpg',
       fallback: '🍲',
       rating: 4.5,
       cookTime: '25 min'
@@ -222,17 +221,20 @@ function Veg() {
   const nextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   const prevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   const goToPage = (pageNumber) => {
     setCurrentPage(pageNumber)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const [quantities, setQuantities] = useState(
@@ -243,6 +245,7 @@ function Veg() {
   )
 
   const [imageErrors, setImageErrors] = useState({})
+  const [imageLoaded, setImageLoaded] = useState({})
 
   const increaseQuantity = (dishId) => {
     setQuantities(prev => ({
@@ -269,7 +272,8 @@ function Veg() {
     alert(`Added ${quantity} ${dish.name} to cart!`)
   }
 
-  const handleImageError = (dishId, imageSrc) => {
+  const handleImageError = (dishId) => {
+    console.log(`Image failed to load for dish ${dishId}`)
     setImageErrors(prev => ({
       ...prev,
       [dishId]: true
@@ -277,6 +281,11 @@ function Veg() {
   }
 
   const handleImageLoad = (dishId) => {
+    console.log(`Image loaded successfully for dish ${dishId}`)
+    setImageLoaded(prev => ({
+      ...prev,
+      [dishId]: true
+    }))
     setImageErrors(prev => ({
       ...prev,
       [dishId]: false
@@ -284,9 +293,22 @@ function Veg() {
   }
 
   // Generate page numbers for pagination
-  const pageNumbers = []
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i)
+  const getPageNumbers = () => {
+    const pages = []
+    const maxVisiblePages = 5
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2))
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+    
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1)
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i)
+    }
+    
+    return pages
   }
 
   return (
@@ -305,15 +327,20 @@ function Veg() {
         {currentItems.map((dish) => (
           <div key={dish.id} className="dish-card">
             <div className="card-image">
-              {!imageErrors[dish.id] ? (
-                <img 
-                  src={dish.image} 
-                  alt={dish.name}
-                  className="dish-image"
-                  onError={() => handleImageError(dish.id, dish.image)}
-                  onLoad={() => handleImageLoad(dish.id)}
-                />
-              ) : (
+              {/* Always try to load image first */}
+              <img 
+                src={dish.image} 
+                alt={dish.name}
+                className="dish-image"
+                onError={() => handleImageError(dish.id)}
+                onLoad={() => handleImageLoad(dish.id)}
+                style={{ 
+                  display: imageErrors[dish.id] ? 'none' : 'block'
+                }}
+              />
+              
+              {/* Show fallback only if image fails to load */}
+              {imageErrors[dish.id] && (
                 <div className="image-fallback">
                   <span className="fallback-emoji">{dish.fallback}</span>
                   <span className="fallback-text">{dish.name}</span>
@@ -334,6 +361,9 @@ function Veg() {
               
               <div className="dish-meta">
                 <span className="cook-time">⏱️ {dish.cookTime}</span>
+                {imageErrors[dish.id] && (
+                  <span className="image-status">📷 Image not available</span>
+                )}
               </div>
               
               <div className="dish-footer">
@@ -385,13 +415,13 @@ function Veg() {
           </button>
           
           <div className="page-numbers">
-            {pageNumbers.map(number => (
+            {getPageNumbers().map(page => (
               <button
-                key={number}
-                className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
-                onClick={() => goToPage(number)}
+                key={page}
+                className={`pagination-btn ${currentPage === page ? 'active' : ''}`}
+                onClick={() => goToPage(page)}
               >
-                {number}
+                {page}
               </button>
             ))}
           </div>

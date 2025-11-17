@@ -8,7 +8,7 @@ function Dairy() {
       name: 'Gulab Jamun',
       description: 'Soft milk dumplings in sweet rose-flavored syrup',
       price: 120,
-      image: '/public/dairy/gulab-jamun.jpg',
+      image: 'public/dairy/gulab-jamun.jpg',
       fallback: '🍮',
       rating: 4.6,
       cookTime: '10 min'
@@ -18,12 +18,41 @@ function Dairy() {
       name: 'Rasmalai',
       description: 'Soft cottage cheese patties in sweetened creamy milk',
       price: 150,
-      image: '/public/dairy/rasmalai.jpg',
+      image: 'public/dairy/rasmalai.jpg',
       fallback: '🥛',
       rating: 4.5,
       cookTime: '5 min'
     },
-    // Add more dairy dishes here
+    {
+      id: 3,
+      name: 'Kheer',
+      description: 'Creamy rice pudding with nuts and cardamom',
+      price: 100,
+      image: 'public/dairy/kheer.jpg',
+      fallback: '🍚',
+      rating: 4.4,
+      cookTime: '15 min'
+    },
+    {
+      id: 4,
+      name: 'Rasgulla',
+      description: 'Spongy cottage cheese balls in light sugar syrup',
+      price: 110,
+      image: 'public/dairy/rasgulla.jpg',
+      fallback: '⚪',
+      rating: 4.7,
+      cookTime: '8 min'
+    },
+    {
+      id: 5,
+      name: 'Peda',
+      description: 'Sweet milk fudge with saffron and cardamom',
+      price: 180,
+      image: 'public/dairy/peda.jpg',
+      fallback: '🍬',
+      rating: 4.3,
+      cookTime: '12 min'
+    }
   ]
 
   const [quantities, setQuantities] = useState(
@@ -34,6 +63,7 @@ function Dairy() {
   )
 
   const [imageErrors, setImageErrors] = useState({})
+  const [imageLoaded, setImageLoaded] = useState({})
 
   const increaseQuantity = (dishId) => {
     setQuantities(prev => ({
@@ -60,10 +90,23 @@ function Dairy() {
     alert(`Added ${quantity} ${dish.name} to cart!`)
   }
 
-  const handleImageError = (dishId, imageSrc) => {
+  const handleImageError = (dishId) => {
+    console.log(`Image failed to load for dish ${dishId}`)
     setImageErrors(prev => ({
       ...prev,
       [dishId]: true
+    }))
+  }
+
+  const handleImageLoad = (dishId) => {
+    console.log(`Image loaded successfully for dish ${dishId}`)
+    setImageLoaded(prev => ({
+      ...prev,
+      [dishId]: true
+    }))
+    setImageErrors(prev => ({
+      ...prev,
+      [dishId]: false
     }))
   }
 
@@ -78,14 +121,20 @@ function Dairy() {
         {dairyDishes.map((dish) => (
           <div key={dish.id} className="dish-card">
             <div className="card-image">
-              {!imageErrors[dish.id] ? (
-                <img 
-                  src={dish.image} 
-                  alt={dish.name}
-                  className="dish-image"
-                  onError={() => handleImageError(dish.id, dish.image)}
-                />
-              ) : (
+              {/* Always try to load image first */}
+              <img 
+                src={dish.image} 
+                alt={dish.name}
+                className="dish-image"
+                onError={() => handleImageError(dish.id)}
+                onLoad={() => handleImageLoad(dish.id)}
+                style={{ 
+                  display: imageErrors[dish.id] ? 'none' : 'block'
+                }}
+              />
+              
+              {/* Show fallback only if image fails to load */}
+              {imageErrors[dish.id] && (
                 <div className="image-fallback">
                   <span className="fallback-emoji">{dish.fallback}</span>
                   <span className="fallback-text">{dish.name}</span>
@@ -106,6 +155,9 @@ function Dairy() {
               
               <div className="dish-meta">
                 <span className="cook-time">⏱️ {dish.cookTime}</span>
+                {imageErrors[dish.id] && (
+                  <span className="image-status">📷 Image not available</span>
+                )}
               </div>
               
               <div className="dish-footer">
