@@ -20,11 +20,11 @@ function App() {
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <Routes>
-          <Route path="/freshcart" element={<Home />} />
-          <Route path="/freshcart/veg" element={<Veg />} />
-          <Route path="/freshcart/non-veg" element={<NonVeg />} />
-          <Route path="/freshcart/dairy" element={<Dairy />} />
-          <Route path="/freshcart/cart" element={<Cart />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/veg" element={<Veg />} />
+          <Route path="/non-veg" element={<NonVeg />} />
+          <Route path="/dairy" element={<Dairy />} />
+          <Route path="/cart" element={<Cart />} />
           {/* Redirect all unknown paths to home */}
           <Route path="*" element={<Home />} />
         </Routes>

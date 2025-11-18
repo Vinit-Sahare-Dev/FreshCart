@@ -7,6 +7,133 @@
   margin: 0 auto;
   padding: 1.5rem 1rem;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  position: relative;
+}
+
+/* Beautiful Popup Styles - Red Theme */
+.nonveg-cart-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(139, 0, 0, 0.15);
+  border: 1px solid #fecaca;
+  z-index: 1000;
+  transform: translateX(400px);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  max-width: 350px;
+  overflow: hidden;
+}
+
+.nonveg-cart-popup.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.nonveg-popup-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 1.25rem;
+  gap: 0.75rem;
+}
+
+.nonveg-popup-icon {
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  animation: nonveg-bounce 0.6s ease;
+}
+
+@keyframes nonveg-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+.nonveg-popup-text {
+  flex: 1;
+}
+
+.nonveg-popup-title {
+  font-weight: 700;
+  color: #7f1d1d;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.nonveg-popup-message {
+  color: #4b5563;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.nonveg-popup-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nonveg-tag {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #fecaca;
+}
+
+.nonveg-popup-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.nonveg-popup-close:hover {
+  background: #fef2f2;
+  color: #374151;
+}
+
+.nonveg-popup-progress {
+  height: 3px;
+  background: linear-gradient(90deg, #dc2626, #b91c1c);
+  width: 100%;
+  animation: nonveg-progress 3s linear;
+}
+
+@keyframes nonveg-progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
 }
 
 .nonveg-header {
@@ -17,7 +144,7 @@
 .nonveg-title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #8B0000; /* Dark red theme for non-veg */
+  color: #8B0000;
   margin-bottom: 0.75rem;
   font-family: 'Playfair Display', serif;
   letter-spacing: -0.02em;
@@ -33,7 +160,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, #8B0000, #DC143C); /* Red gradient */
+  background: linear-gradient(90deg, #8B0000, #DC143C);
   border-radius: 2px;
 }
 
@@ -67,13 +194,13 @@
 .nonveg-dish-card {
   background: white;
   border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.08); /* Red tint shadow */
+  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.08);
   transition: all 0.3s ease;
-  border: 1px solid #fbd5d5; /* Light red border */
+  border: 1px solid #fbd5d5;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 480px; /* Fixed height for all cards */
+  height: 480px;
   position: relative;
 }
 
@@ -84,7 +211,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #8B0000, #DC143C); /* Red gradient */
+  background: linear-gradient(90deg, #8B0000, #DC143C);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
@@ -107,8 +234,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background: #fef2f2; /* Light red background */
-  flex-shrink: 0; /* Prevent image from shrinking */
+  background: #fef2f2;
+  flex-shrink: 0;
 }
 
 .nonveg-dish-image {
@@ -131,7 +258,7 @@
   justify-content: center;
   height: 100%;
   width: 100%;
-  background: linear-gradient(135deg, #fef2f2, #fbd5d5); /* Red gradient */
+  background: linear-gradient(135deg, #fef2f2, #fbd5d5);
   padding: 0.75rem;
   flex-shrink: 0;
 }
@@ -145,7 +272,7 @@
 .nonveg-fallback-text {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #7f1d1d; /* Dark red text */
+  color: #7f1d1d;
   text-align: center;
   font-family: 'Inter', sans-serif;
 }
@@ -156,7 +283,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 0; /* Important for flexbox sizing */
+  min-height: 0;
 }
 
 .nonveg-dish-header {
@@ -164,19 +291,19 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 0.75rem;
-  min-height: 3rem; /* Fixed height for header */
+  min-height: 3rem;
 }
 
 .nonveg-dish-name {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #7f1d1d; /* Dark red */
+  color: #7f1d1d;
   margin: 0;
   flex: 1;
   font-family: 'Inter', sans-serif;
   line-height: 1.3;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit to 2 lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -187,7 +314,7 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: linear-gradient(135deg, #dc2626, #b91c1c); /* Red gradient */
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
   padding: 0.375rem 0.75rem;
   border-radius: 0.75rem;
   color: white;
@@ -195,7 +322,7 @@
   font-weight: 600;
   font-family: 'Inter', sans-serif;
   box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
-  flex-shrink: 0; /* Prevent rating from shrinking */
+  flex-shrink: 0;
   margin-left: 0.5rem;
 }
 
@@ -211,16 +338,16 @@
   flex: 1;
   font-family: 'Inter', sans-serif;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* Limit to 3 lines */
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  min-height: 4.2rem; /* Fixed height for description */
+  min-height: 4.2rem;
 }
 
 .nonveg-dish-meta {
   margin-bottom: 1.25rem;
-  flex-shrink: 0; /* Prevent meta from shrinking */
+  flex-shrink: 0;
 }
 
 .nonveg-cook-time {
@@ -239,8 +366,8 @@
   align-items: center;
   gap: 0.75rem;
   margin-top: auto;
-  flex-shrink: 0; /* Prevent footer from shrinking */
-  min-height: 3.5rem; /* Fixed height for footer */
+  flex-shrink: 0;
+  min-height: 3.5rem;
 }
 
 .nonveg-price-section {
@@ -253,19 +380,19 @@
 .nonveg-price {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #7f1d1d; /* Dark red */
+  color: #7f1d1d;
   font-family: 'Inter', sans-serif;
 }
 
 .nonveg-total-price {
   font-size: 0.8rem;
-  color: #dc2626; /* Bright red */
+  color: #dc2626;
   font-weight: 600;
   margin-top: 0.25rem;
-  background: #fef2f2; /* Light red background */
+  background: #fef2f2;
   padding: 0.375rem 0.75rem;
   border-radius: 0.5rem;
-  border: 1px solid #fecaca; /* Light red border */
+  border: 1px solid #fecaca;
   font-family: 'Inter', sans-serif;
 }
 
@@ -273,11 +400,11 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: #fef2f2; /* Light red background */
+  background: #fef2f2;
   border-radius: 0.5rem;
   padding: 0.375rem;
-  border: 1px solid #fecaca; /* Light red border */
-  flex-shrink: 0; /* Prevent quantity controls from shrinking */
+  border: 1px solid #fecaca;
+  flex-shrink: 0;
 }
 
 .nonveg-quantity {
@@ -301,7 +428,7 @@
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
-  flex-shrink: 0; /* Prevent button from shrinking */
+  flex-shrink: 0;
 }
 
 .nonveg-btn::before {
@@ -320,10 +447,14 @@
 }
 
 .nonveg-btn-primary {
-  background: linear-gradient(135deg, #8B0000, #DC143C); /* Red gradient */
+  background: linear-gradient(135deg, #8B0000, #DC143C);
   color: white;
   flex: 1;
   box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
 }
 
 .nonveg-btn-primary:hover {
@@ -334,7 +465,7 @@
 
 .nonveg-btn-outline {
   background: white;
-  border: 1px solid #fecaca; /* Light red border */
+  border: 1px solid #fecaca;
   color: #374151;
   width: 2rem;
   height: 2rem;
@@ -367,6 +498,7 @@
 
 .nonveg-add-to-cart-btn {
   white-space: nowrap;
+  text-align: center;
 }
 
 /* Pagination Styles - Non-veg Theme */
@@ -432,6 +564,21 @@
   justify-content: center;
 }
 
+/* Non-veg Badge */
+.nonveg-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: linear-gradient(135deg, #DC143C, #8B0000);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(139, 0, 0, 0.3);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .nonveg-container {
@@ -452,7 +599,7 @@
   }
   
   .nonveg-dish-card {
-    height: 460px; /* Slightly smaller for mobile */
+    height: 460px;
   }
   
   .nonveg-card-image {
@@ -467,7 +614,7 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
-    min-height: 5rem; /* Increased for mobile layout */
+    min-height: 5rem;
   }
   
   .nonveg-quantity-controls {
@@ -503,6 +650,14 @@
   .nonveg-page-numbers {
     order: -1;
   }
+  
+  /* Mobile popup */
+  .nonveg-cart-popup {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
 }
 
 @media (max-width: 480px) {
@@ -512,7 +667,7 @@
   }
   
   .nonveg-dish-card {
-    height: 440px; /* Even smaller for very small screens */
+    height: 440px;
   }
   
   .nonveg-card-content {
@@ -573,7 +728,7 @@
   }
   
   .nonveg-dish-description {
-    -webkit-line-clamp: 2; /* Show fewer lines on mobile */
+    -webkit-line-clamp: 2;
     min-height: 2.8rem;
   }
 }
@@ -601,19 +756,4 @@
 .nonveg-pagination-btn:focus {
   outline: 2px solid #8B0000;
   outline-offset: 2px;
-}
-
-/* Non-veg Badge (Optional) */
-.nonveg-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: linear-gradient(135deg, #DC143C, #8B0000);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(139, 0, 0, 0.3);
 }

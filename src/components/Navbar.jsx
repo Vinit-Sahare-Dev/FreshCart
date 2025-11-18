@@ -1,20 +1,19 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import './Navbar.css'
 
 function Navbar() {
   const location = useLocation()
+  const { totalItems } = useSelector(state => state.cart)
 
   const isActive = (path) => {
-    if (path === '/freshcart') {
-      return location.pathname === '/freshcart' || location.pathname === '/freshcart/'
-    }
     return location.pathname === path
   }
 
   return (
     <nav className="navbar">
       <div className="nav-brand">
-        <Link to="/freshcart">
+        <Link to="/">
           <span className="brand-icon">🛒</span>
           FreshCart
         </Link>
@@ -22,35 +21,35 @@ function Navbar() {
       
       <div className="nav-links">
         <Link 
-          to="/freshcart" 
-          className={`nav-link ${isActive('/freshcart') ? 'active' : ''}`}
+          to="/" 
+          className={`nav-link ${isActive('/') ? 'active' : ''}`}
         >
           🏠 Home
         </Link>
         <Link 
-          to="/freshcart/veg" 
-          className={`nav-link ${isActive('/freshcart/veg') ? 'active' : ''}`}
+          to="/veg" 
+          className={`nav-link ${isActive('/veg') ? 'active' : ''}`}
         >
           🌱 Vegetarian
         </Link>
         <Link 
-          to="/freshcart/non-veg" 
-          className={`nav-link ${isActive('/freshcart/non-veg') ? 'active' : ''}`}
+          to="/non-veg" 
+          className={`nav-link ${isActive('/non-veg') ? 'active' : ''}`}
         >
           🍗 Non-Veg
         </Link>
         <Link 
-          to="/freshcart/dairy" 
-          className={`nav-link ${isActive('/freshcart/dairy') ? 'active' : ''}`}
+          to="/dairy" 
+          className={`nav-link ${isActive('/dairy') ? 'active' : ''}`}
         >
           🥛 Dairy
         </Link>
         <Link 
-          to="/freshcart/cart" 
+          to="/cart" 
           className="nav-link cart-link"
         >
           <span className="cart-icon">🛒</span>
-          Cart
+          Cart {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
         </Link>
       </div>
     </nav>

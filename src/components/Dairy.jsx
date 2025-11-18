@@ -1,7 +1,16 @@
 import { useState } from 'react'
-import './Veg.css' // Using same CSS as Veg component
+import { useDispatch } from 'react-redux'
+import { addToCart } from './cartSlice'
+import './Veg.css'
 
 function Dairy() {
+  const dispatch = useDispatch()
+
+  // Popup state
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [popupItem, setPopupItem] = useState(null)
+
   const dairyDishes = [
     {
       id: 1,
@@ -79,15 +88,33 @@ function Dairy() {
     }))
   }
 
-  const addToCart = (dish) => {
+  // Show popup function
+  const showAddToCartPopup = (message, item) => {
+    setPopupMessage(message)
+    setPopupItem(item)
+    setShowPopup(true)
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      setShowPopup(false)
+    }, 3000)
+  }
+
+  const addToCartHandler = (dish) => {
     const quantity = quantities[dish.id]
-    const item = {
-      ...dish,
-      quantity: quantity,
-      totalPrice: dish.price * quantity
+    const cartItem = {
+      id: dish.id,
+      name: dish.name,
+      price: dish.price,
+      image: dish.image,
+      category: 'dairy',
+      quantity: quantity
     }
-    console.log('Added to cart:', item)
-    alert(`Added ${quantity} ${dish.name} to cart!`)
+    
+    dispatch(addToCart(cartItem))
+    
+    // Show beautiful popup instead of alert
+    showAddToCartPopup(`Added ${quantity} ${dish.name} to cart!`, dish)
   }
 
   const handleImageError = (dishId) => {
@@ -112,6 +139,31 @@ function Dairy() {
 
   return (
     <div className="veg-container">
+      {/* Beautiful Popup Notification */}
+      {showPopup && (
+        <div className="cart-popup show">
+          <div className="popup-content">
+            <div className="popup-icon">✅</div>
+            <div className="popup-text">
+              <div className="popup-title">Added to Cart!</div>
+              <div className="popup-message">{popupMessage}</div>
+              {popupItem && (
+                <div className="popup-item">
+                  <span className="dairy-tag">🥛 Dairy & Dessert</span>
+                </div>
+              )}
+            </div>
+            <button 
+              className="popup-close"
+              onClick={() => setShowPopup(false)}
+            >
+              ×
+            </button>
+          </div>
+          <div className="popup-progress"></div>
+        </div>
+      )}
+
       <div className="veg-header">
         <h1 className="veg-title">Dairy & Desserts</h1>
         <p className="veg-subtitle">Sweet treats and fresh dairy products</p>
@@ -187,7 +239,7 @@ function Dairy() {
                 
                 <button 
                   className="btn btn-primary add-to-cart-btn"
-                  onClick={() => addToCart(dish)}
+                  onClick={() => addToCartHandler(dish)}
                 >
                   Add to Cart
                 </button>

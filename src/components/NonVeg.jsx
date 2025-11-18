@@ -1,7 +1,16 @@
 import { useState } from 'react'
-import './nonveg.css' // Using the new non-veg specific CSS
+import { useDispatch } from 'react-redux'
+import { addToCart } from './cartSlice'
+import './nonveg.css'
 
 function NonVeg() {
+  const dispatch = useDispatch()
+
+  // Popup state
+  const [showPopup, setShowPopup] = useState(false)
+  const [popupMessage, setPopupMessage] = useState('')
+  const [popupItem, setPopupItem] = useState(null)
+
   const nonVegDishes = [
     {
       id: 1,
@@ -156,15 +165,33 @@ function NonVeg() {
     }))
   }
 
-  const addToCart = (dish) => {
+  // Show popup function
+  const showAddToCartPopup = (message, item) => {
+    setPopupMessage(message)
+    setPopupItem(item)
+    setShowPopup(true)
+    
+    // Auto hide after 3 seconds
+    setTimeout(() => {
+      setShowPopup(false)
+    }, 3000)
+  }
+
+  const addToCartHandler = (dish) => {
     const quantity = quantities[dish.id]
-    const item = {
-      ...dish,
-      quantity: quantity,
-      totalPrice: dish.price * quantity
+    const cartItem = {
+      id: dish.id,
+      name: dish.name,
+      price: dish.price,
+      image: dish.image,
+      category: 'nonveg',
+      quantity: quantity
     }
-    console.log('Added to cart:', item)
-    alert(`Added ${quantity} ${dish.name} to cart!`)
+    
+    dispatch(addToCart(cartItem))
+    
+    // Show beautiful popup instead of alert
+    showAddToCartPopup(`Added ${quantity} ${dish.name} to cart!`, dish)
   }
 
   const handleImageError = (dishId) => {
@@ -227,6 +254,31 @@ function NonVeg() {
 
   return (
     <div className="nonveg-container">
+      {/* Beautiful Popup Notification with Red Theme */}
+      {showPopup && (
+        <div className="nonveg-cart-popup show">
+          <div className="nonveg-popup-content">
+            <div className="nonveg-popup-icon">✅</div>
+            <div className="nonveg-popup-text">
+              <div className="nonveg-popup-title">Added to Cart!</div>
+              <div className="nonveg-popup-message">{popupMessage}</div>
+              {popupItem && (
+                <div className="nonveg-popup-item">
+                  <span className="nonveg-tag">🔴 Non-Vegetarian</span>
+                </div>
+              )}
+            </div>
+            <button 
+              className="nonveg-popup-close"
+              onClick={() => setShowPopup(false)}
+            >
+              ×
+            </button>
+          </div>
+          <div className="nonveg-popup-progress"></div>
+        </div>
+      )}
+
       <div className="nonveg-header">
         <h1 className="nonveg-title">Non-Veg Specials</h1>
         <p className="nonveg-subtitle">Premium quality meat dishes</p>
@@ -306,7 +358,7 @@ function NonVeg() {
                 
                 <button 
                   className="nonveg-btn nonveg-btn-primary nonveg-add-to-cart-btn"
-                  onClick={() => addToCart(dish)}
+                  onClick={() => addToCartHandler(dish)}
                 >
                   Add to Cart
                 </button>
