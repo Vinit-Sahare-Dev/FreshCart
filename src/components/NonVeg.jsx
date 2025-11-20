@@ -57,7 +57,7 @@ function NonVeg() {
       name: 'Chicken Tikka Masala',
       description: 'Grilled chicken chunks in creamy tomato sauce',
       price: 350,
-      image: 'public/nonveg/chicken-tikka-masala.jpg',
+      image: 'public/nonveg/chicken-tikka-masala.jpeg',
       fallback: '🍢',
       rating: 4.7,
       cookTime: '30 min'
@@ -67,7 +67,7 @@ function NonVeg() {
       name: 'Prawn Fry',
       description: 'Crispy fried prawns with Indian spices',
       price: 420,
-      image: 'public/nonveg/prawn-fry.jpg',
+      image: 'public/nonveg/prawn-fry.JPG',
       fallback: '🦐',
       rating: 4.4,
       cookTime: '20 min'
@@ -77,7 +77,7 @@ function NonVeg() {
       name: 'Egg Curry',
       description: 'Boiled eggs in flavorful onion-tomato gravy',
       price: 180,
-      image: 'public/nonveg/egg-curry.jpg',
+      image: 'public/nonveg/egg-curry.jpeg',
       fallback: '🥚',
       rating: 4.3,
       cookTime: '15 min'
@@ -127,7 +127,7 @@ function NonVeg() {
       name: 'Chicken 65',
       description: 'Spicy deep-fried chicken appetizer',
       price: 260,
-      image: 'public/nonveg/chicken-65.jpg',
+      image: 'public/nonveg/chicken-65.jpeg',
       fallback: '🔥',
       rating: 4.6,
       cookTime: '15 min'
