@@ -4,12 +4,26 @@ import { removeFromCart, updateQuantity, clearCart } from './cartSlice'
 import QRScanner from './QRScanner'
 import './Cart.css'
 
+const GST_RATE = 0.18
+
 function Cart() {
   const dispatch = useDispatch()
   const { items: cartItems, totalAmount, totalItems } = useSelector(state => state.cart)
   
   // QR Scanner state
   const [showQRScanner, setShowQRScanner] = useState(false)
+
+  // Coupon / discount state
+  const [couponCode, setCouponCode] = useState('')
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [discountAmount, setDiscountAmount] = useState(0)
+  const [couponError, setCouponError] = useState('')
+
+  // Derived amounts
+  const subtotal = totalAmount
+  const effectiveSubtotal = Math.max(subtotal - discountAmount, 0)
+  const gstAmount = effectiveSubtotal * GST_RATE
+  const grandTotal = effectiveSubtotal + gstAmount
 
   const removeFromCartHandler = (itemId) => {
     dispatch(removeFromCart(itemId))
@@ -22,6 +36,50 @@ function Cart() {
 
   const clearCartHandler = () => {
     dispatch(clearCart())
+  }
+
+  const applyCoupon = (rawCode) => {
+    if (cartItems.length === 0) {
+      setCouponError('Add items to cart before applying a coupon.')
+      return
+    }
+
+    const code = rawCode.trim().toUpperCase()
+
+    let discount = 0
+    let description = ''
+
+    if (code === 'FRESH10' || code === 'VINIT10') {
+      discount = subtotal * 0.10
+      description = '10% off on cart value'
+    } else if (code === 'FRESH50') {
+      discount = 50
+      description = 'Flat ₹50 off'
+    } else {
+      setCouponError('Invalid coupon code')
+      setAppliedCoupon(null)
+      setDiscountAmount(0)
+      return
+    }
+
+    if (discount > subtotal) {
+      discount = subtotal
+    }
+
+    setAppliedCoupon({ code, description })
+    setDiscountAmount(discount)
+    setCouponError('')
+  }
+
+  const handleApplyCoupon = () => {
+    applyCoupon(couponCode)
+  }
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null)
+    setDiscountAmount(0)
+    setCouponCode('')
+    setCouponError('')
   }
 
   const handlePaymentSuccess = () => {
@@ -45,7 +103,7 @@ function Cart() {
       {/* QR Scanner Modal */}
       {showQRScanner && (
         <QRScanner 
-          totalAmount={totalAmount}
+          totalAmount={grandTotal}
           onClose={() => setShowQRScanner(false)}
           onPaymentSuccess={handlePaymentSuccess}
         />
@@ -58,7 +116,7 @@ function Cart() {
         {cartItems.length > 0 && (
           <div className="cart-summary">
             <span className="items-count">{totalItems} items</span>
-            <span className="total-amount">Total: ₹{totalAmount}</span>
+            <span className="total-amount">Total (incl. GST): ₹{grandTotal.toFixed(2)}</span>
           </div>
         )}
       </div>
@@ -119,7 +177,7 @@ function Cart() {
                       className="remove-btn"
                       onClick={() => removeFromCartHandler(item.id)}
                     >
-                      🗑️
+                      ☒
                     </button>
                   </div>
                 </div>
@@ -135,14 +193,75 @@ function Cart() {
               </button>
               
               <div className="checkout-section">
-                <div className="final-total">
-                  <span className="total-label">Grand Total:</span>
-                  <span className="total-value">₹{totalAmount}</span>
+                <div className="coupon-section">
+                  <label className="coupon-label">Have a coupon?</label>
+                  <div className="coupon-input-row">
+                    <input
+                      type="text"
+                      className="coupon-input"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon (e.g. FRESH10 or Vinit10)"
+                      disabled={cartItems.length === 0}
+                    />
+                    <button
+                      className="apply-coupon-btn"
+                      onClick={handleApplyCoupon}
+                      disabled={cartItems.length === 0}
+                    >
+                      Apply
+                    </button>
+                    <button
+                      className="apply-coupon-btn"
+                      onClick={() => applyCoupon('Vinit10')}
+                      disabled={cartItems.length === 0}
+                    >
+                      Apply Vinit10 (10% off)
+                    </button>
+                    {appliedCoupon && (
+                      <button
+                        className="remove-coupon-btn"
+                        onClick={handleRemoveCoupon}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  {couponError && (
+                    <p className="coupon-error">{couponError}</p>
+                  )}
+                  {appliedCoupon && !couponError && (
+                    <p className="coupon-applied">
+                      Applied: {appliedCoupon.code} - {appliedCoupon.description}
+                    </p>
+                  )}
                 </div>
+
+                <div className="price-breakup">
+                  <div className="price-row">
+                    <span>Subtotal:</span>
+                    <span>₹{subtotal.toFixed(2)}</span>
+                  </div>
+                  {discountAmount > 0 && (
+                    <div className="price-row discount-row">
+                      <span>Discount:</span>
+                      <span>- ₹{discountAmount.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="price-row">
+                    <span>GST (18%):</span>
+                    <span>₹{gstAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="price-row grand-total-row">
+                    <span>Grand Total:</span>
+                    <span>₹{grandTotal.toFixed(2)}</span>
+                  </div>
+                </div>
+
                 <button 
                   className="checkout-btn"
                   onClick={proceedToCheckout}
-                >
+>
                   🛍️ Proceed to Checkout
                 </button>
               </div>
