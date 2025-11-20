@@ -19,7 +19,8 @@ C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\repository\OrderR
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\repository\UserRepository.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\security\JwtUtil.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\security\SecurityConfig.java
-C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\DishService.java
-C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\OrderService.java
-C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\PaymentService.java
-C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\UserService.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\CustomUserDetailsService.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\DishServiceImpl.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\OrderServiceImpl.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\PaymentServiceImpl.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\service\UserServiceImpl.java
