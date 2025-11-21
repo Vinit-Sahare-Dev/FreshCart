@@ -2,7 +2,7 @@ package com.example.hotel.dto;
 
 import java.math.BigDecimal;
 
-public class DishDto {
+public class DishDTO {
 
     private Long id;
     private String name;

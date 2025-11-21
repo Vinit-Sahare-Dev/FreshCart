@@ -1,17 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCart } from './cartSlice'
+import { getDishesByCategory } from '../api/menuApi'
 import './Veg.css'
 
 function Veg() {
   const dispatch = useDispatch()
-  
+
   // Popup state
   const [showPopup, setShowPopup] = useState(false)
   const [popupMessage, setPopupMessage] = useState('')
   const [popupItem, setPopupItem] = useState(null)
-  
-  const vegDishes = [
+
+  // Dishes state
+  const [vegDishes, setVegDishes] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchDishes = async () => {
+      try {
+        const data = await getDishesByCategory('veg')
+        setVegDishes(data)
+        setLoading(false)
+      } catch (error) {
+        console.error('Failed to fetch veg dishes:', error)
+        // Fallback to static data if backend fails
+        setVegDishes([
     {
       id: 1,
       name: 'Paneer Butter Masala',
@@ -212,7 +226,20 @@ function Veg() {
       rating: 4.5,
       cookTime: '25 min'
     }
-  ]
+  ])
+        setLoading(false)
+      }
+    }
+    fetchDishes()
+  }, [])
+
+  // Initialize quantities when vegDishes changes
+  useEffect(() => {
+    setQuantities(vegDishes.reduce((acc, dish) => {
+      acc[dish.id] = 1
+      return acc
+    }, {}))
+  }, [vegDishes])
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
@@ -225,6 +252,18 @@ function Veg() {
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = vegDishes.slice(indexOfFirstItem, indexOfLastItem)
+
+  // Use currentItems directly if from backend, else format static data
+  const formattedDishes = vegDishes.length > 0 ? currentItems : currentItems.map(dish => ({
+    id: dish.id,
+    name: dish.name,
+    description: dish.description,
+    price: dish.price,
+    image: dish.imageUrl || 'public/veg/default.jpg', // Assuming imageUrl from backend
+    fallback: '🥗',
+    rating: dish.rating || 4.5,
+    cookTime: dish.cookTime || '25 min'
+  }))
 
   // Pagination functions
   const nextPage = () => {
