@@ -75,12 +75,7 @@ public class DishServiceImpl implements DishService {
     }
 
     private Dish convertToEntity(DishDTO dto) {
-        Dish dish = new Dish();
-        dish.setName(dto.getName());
-        dish.setDescription(dto.getDescription());
-        dish.setPrice(dto.getPrice());
-        dish.setCategory(dto.getCategory());
-        dish.setImageUrl(dto.getImageUrl());
+        Dish dish = new Dish(dto.getName(), dto.getDescription(), dto.getPrice(), dto.getImageUrl(), dto.getCategory(), true);
         return dish;
     }
 }

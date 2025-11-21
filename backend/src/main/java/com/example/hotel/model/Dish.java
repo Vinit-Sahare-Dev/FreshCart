@@ -28,6 +28,16 @@ public class Dish {
 
     private boolean available = true;
 
+    // Constructor
+    public Dish(String name, String description, BigDecimal price, String imageUrl, String category, boolean available) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.category = category;
+        this.available = available;
+    }
+
     // Getters and setters
     public Long getId() {
         return id;

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { addToCart } from './cartSlice'
-import { getDishesByCategory } from '../api/menuApi'
+import dishService from '../services/dishService'
 import './Veg.css'
 
 function Veg() {
@@ -19,7 +19,7 @@ function Veg() {
   useEffect(() => {
     const fetchDishes = async () => {
       try {
-        const data = await getDishesByCategory('veg')
+        const data = await dishService.getDishesByCategory('veg')
         setVegDishes(data)
         setLoading(false)
       } catch (error) {
