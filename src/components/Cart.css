@@ -746,3 +746,83 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+
+/* Add these styles to your existing Cart.css file */
+
+/* Checkout Buttons Group */
+.checkout-buttons-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.checkout-btn-alt {
+  background: linear-gradient(135deg, #ff6b35, #ff8e35);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.checkout-btn-alt::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.checkout-btn-alt:hover::before {
+  left: 100%;
+}
+
+.checkout-btn-alt:hover {
+  background: linear-gradient(135deg, #ff8e35, #ff6b35);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+.checkout-btn-alt:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments for buttons */
+@media (max-width: 768px) {
+  .checkout-buttons-group {
+    gap: 0.75rem;
+  }
+
+  .checkout-btn,
+  .checkout-btn-alt {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-btn,
+  .checkout-btn-alt {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+  }
+}

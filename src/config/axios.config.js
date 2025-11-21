@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 10000,
+  withCredentials: true, // Set to true since allowCredentials is true in backend
 });
 
 // Request interceptor - Add token to requests
@@ -31,9 +32,7 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
       localStorage.removeItem('hotel_jwt');
-      window.location.href = '/login';
     }
     return Promise.reject(error);
   }

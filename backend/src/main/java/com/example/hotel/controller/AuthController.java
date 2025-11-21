@@ -2,6 +2,7 @@ package com.example.hotel.controller;
 
 import com.example.hotel.dto.AuthRequest;
 import com.example.hotel.dto.AuthResponse;
+import com.example.hotel.dto.UserDto;
 import com.example.hotel.model.User;
 import com.example.hotel.security.JwtUtil;
 import com.example.hotel.service.UserService;
@@ -28,9 +29,27 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody User user) {
-        userService.registerCustomer(user);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AuthResponse> register(@RequestBody User user) {
+        try {
+            // Register the user
+            User registeredUser = userService.registerCustomer(user);
+            
+            // Generate token for the new user
+            String token = jwtUtil.generateToken(registeredUser.getEmail());
+            
+            // Create user DTO
+            UserDto userDto = new UserDto(
+                registeredUser.getId(), 
+                registeredUser.getFullName(), 
+                registeredUser.getEmail(), 
+                registeredUser.getRole()
+            );
+            
+            // Return token and user info
+            return ResponseEntity.ok(new AuthResponse(token, userDto));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/login")
@@ -39,11 +58,13 @@ public class AuthController {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
-            
+
+            User user = userService.findByEmail(request.getEmail());
+            UserDto userDto = new UserDto(user.getId(), user.getFullName(), user.getEmail(), user.getRole());
             String token = jwtUtil.generateToken(request.getEmail());
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(token, userDto));
         } catch (Exception e) {
-            return ResponseEntity.status(401).body(new AuthResponse(null));
+            return ResponseEntity.status(401).body(new AuthResponse(null, null));
         }
     }
 }
