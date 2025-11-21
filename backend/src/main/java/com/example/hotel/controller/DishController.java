@@ -1,6 +1,6 @@
 package com.example.hotel.controller;
 
-import com.example.hotel.dto.DishDto;
+import com.example.hotel.dto.DishDTO; // Changed from DishDto
 import com.example.hotel.service.DishService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +19,21 @@ public class DishController {
     }
 
     @GetMapping
-    public ResponseEntity<List<DishDto>> getAllDishes(@RequestParam(required = false) String category) {
+    public ResponseEntity<List<DishDTO>> getAllDishes(@RequestParam(required = false) String category) {
         if (category != null && !category.isBlank()) {
             return ResponseEntity.ok(dishService.getDishesByCategory(category));
         }
         return ResponseEntity.ok(dishService.getAllDishes());
     }
 
-    // Admin endpoints (implement auth later)
     @PostMapping
-    public ResponseEntity<DishDto> createDish(@RequestBody DishDto dishDto) {
-        return ResponseEntity.ok(dishService.createDish(dishDto));
+    public ResponseEntity<DishDTO> createDish(@RequestBody DishDTO dishDTO) {
+        return ResponseEntity.ok(dishService.createDish(dishDTO));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DishDto> updateDish(@PathVariable Long id, @RequestBody DishDto dishDto) {
-        return ResponseEntity.ok(dishService.updateDish(id, dishDto));
+    public ResponseEntity<DishDTO> updateDish(@PathVariable Long id, @RequestBody DishDTO dishDTO) {
+        return ResponseEntity.ok(dishService.updateDish(id, dishDTO));
     }
 
     @DeleteMapping("/{id}")

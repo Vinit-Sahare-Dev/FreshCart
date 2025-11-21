@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
-  const handleLogin = async (email, password) {
+  const handleLogin = async (email, password) => {
     const response = await apiLogin({ email, password });
     if (response?.token) {
       setToken(response.token);
@@ -39,7 +39,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const handleRegister = async (payload) {
+  const handleRegister = async (payload) => {
     await apiRegister(payload);
     // After registration, you can decide to auto-login or redirect to login page
   };
