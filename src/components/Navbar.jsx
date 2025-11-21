@@ -1,7 +1,9 @@
 // src/components/Navbar.jsx
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../context/AuthContext';
+import AuthModal from './AuthModal';
 import './Navbar.css';
 
 function Navbar() {
@@ -9,6 +11,7 @@ function Navbar() {
   const navigate = useNavigate();
   const { totalItems } = useSelector(state => state.cart);
   const { isAuthenticated, user, logout } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -16,83 +19,102 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate('/');
+  };
+
+  const handleAccountClick = () => {
+    if (isAuthenticated) {
+      // If authenticated, navigate to account page
+      navigate('/account');
+    } else {
+      // If not authenticated, show auth modal
+      setShowAuthModal(true);
+    }
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
+    // After successful auth, redirect to account page
+    navigate('/account');
   };
 
   return (
-    <nav className="navbar">
-      <div className="nav-brand">
-        <Link to="/">
-          <span className="brand-icon">🛒</span>
-          FreshCart
-        </Link>
-      </div>
-      
-      <div className="nav-links">
-        <Link 
-          to="/" 
-          className={`nav-link ${isActive('/') ? 'active' : ''}`}
-        >
-          🏠 Home
-        </Link>
-        <Link 
-          to="/veg" 
-          className={`nav-link ${isActive('/veg') ? 'active' : ''}`}
-        >
-          🌱 Vegetarian
-        </Link>
-        <Link 
-          to="/non-veg" 
-          className={`nav-link ${isActive('/non-veg') ? 'active' : ''}`}
-        >
-          🍗 Non-Veg
-        </Link>
-        <Link 
-          to="/dairy" 
-          className={`nav-link ${isActive('/dairy') ? 'active' : ''}`}
-        >
-          🥛 Dairy
-        </Link>
-        <Link 
-          to="/cart" 
-          className="nav-link cart-link"
-        >
-          <span className="cart-icon">🛒</span>
-          Cart {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
-        </Link>
+    <>
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onSuccess={handleAuthSuccess}
+      />
 
-        {isAuthenticated ? (
-          <>
-            <span className="nav-link user-info">
-              👤 {user?.sub || 'User'}
-            </span>
+      <nav className="navbar">
+        <div className="nav-brand">
+          <Link to="/">
+            <span className="brand-icon">🛒</span>
+            FreshCart
+          </Link>
+        </div>
+        
+        <div className="nav-links">
+          <Link 
+            to="/" 
+            className={`nav-link ${isActive('/') ? 'active' : ''}`}
+          >
+            🏠 Home
+          </Link>
+          <Link 
+            to="/veg" 
+            className={`nav-link ${isActive('/veg') ? 'active' : ''}`}
+          >
+            🌱 Vegetarian
+          </Link>
+          <Link 
+            to="/non-veg" 
+            className={`nav-link ${isActive('/non-veg') ? 'active' : ''}`}
+          >
+            🍗 Non-Veg
+          </Link>
+          <Link 
+            to="/dairy" 
+            className={`nav-link ${isActive('/dairy') ? 'active' : ''}`}
+          >
+            🥛 Dairy
+          </Link>
+          <Link 
+            to="/cart" 
+            className={`nav-link ${isActive('/cart') ? 'active' : ''}`}
+          >
+            <span className="cart-icon">🛒</span>
+            Cart {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
+          </Link>
+
+          {isAuthenticated ? (
+            <>
+              <Link 
+                to="/account" 
+                className={`nav-link ${isActive('/account') ? 'active' : ''}`}
+              >
+                👤 {user?.sub || 'Account'}
+              </Link>
+              <button 
+                onClick={handleLogout}
+                className="nav-link logout-btn"
+              >
+                🚪 Logout
+              </button>
+            </>
+          ) : (
             <button 
-              onClick={handleLogout}
-              className="nav-link logout-btn"
+              onClick={handleAccountClick}
+              className={`nav-link account-btn ${isActive('/account') ? 'active' : ''}`}
             >
-              🚪 Logout
+              👤 Account
             </button>
-          </>
-        ) : (
-          <>
-            <Link 
-              to="/login" 
-              className={`nav-link ${isActive('/login') ? 'active' : ''}`}
-            >
-              🔐 Login
-            </Link>
-            <Link 
-              to="/register" 
-              className={`nav-link register-link ${isActive('/register') ? 'active' : ''}`}
-            >
-              ✨ Register
-            </Link>
-          </>
-        )}
-      </div>
-    </nav>
+          )}
+        </div>
+      </nav>
+    </>
   );
 }
 
 export default Navbar;
-

@@ -1,3 +1,4 @@
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\config\CorsConfig.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\config\DataLoader.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\controller\AuthController.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\controller\DishController.java
@@ -12,6 +13,7 @@ C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\dto\OrderRequest.
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\dto\OrderResponse.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\dto\PaymentRequest.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\dto\PaymentResponse.java
+C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\dto\UserDto.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\HotelApplication.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\model\Dish.java
 C:\ReactEcom\FreshCart\backend\src\main\java\com\example\hotel\model\Order.java

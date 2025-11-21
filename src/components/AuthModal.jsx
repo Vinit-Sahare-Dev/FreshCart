@@ -1,9 +1,10 @@
 // src/components/AuthModal.jsx
-import React, { useState } from 'react';
-import authService from '../services/authService';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import './AuthModal.css';
 
 function AuthModal({ isOpen, onClose, onSuccess }) {
+  const { user, isAuthenticated, login, register } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,6 +20,27 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
     password: '',
     confirmPassword: '',
   });
+
+  // Auto-handle success when user becomes authenticated
+  useEffect(() => {
+    if (isOpen && isAuthenticated) {
+      console.log('User authenticated, triggering success callback');
+      // Reset forms
+      setLoginData({ email: '', password: '' });
+      setRegisterData({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+      
+      // Close modal and trigger success
+      onClose();
+      if (onSuccess) {
+        onSuccess();
+      }
+    }
+  }, [isAuthenticated, isOpen, onClose, onSuccess]);
 
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -36,10 +58,21 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
     setError('');
 
     try {
-      await authService.login(loginData);
-      onSuccess();
+      await login({
+        email: loginData.email,
+        password: loginData.password,
+      });
+      
+      console.log('Login successful, waiting for auth state update...');
+      // The useEffect above will handle the success callback automatically
     } catch (err) {
-      setError(err.message || 'Login failed');
+      console.error('Login error:', err);
+      console.error('Login error details:', {
+        message: err.message,
+        response: err.response,
+        stack: err.stack
+      });
+      setError(err.response?.data?.message || err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -49,6 +82,7 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
     e.preventDefault();
     setError('');
 
+    // Validation
     if (registerData.password !== registerData.confirmPassword) {
       setError('Passwords do not match');
       return;
@@ -59,29 +93,69 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
       return;
     }
 
+    if (!registerData.fullName.trim()) {
+      setError('Please enter your full name');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      await authService.register({
+      console.log('Attempting registration with:', {
+        fullName: registerData.fullName,
+        email: registerData.email,
+        password: '***', // Don't log actual password
+        role: 'CUSTOMER'
+      });
+      
+      // Register the user
+      const result = await register({
         fullName: registerData.fullName,
         email: registerData.email,
         password: registerData.password,
         role: 'CUSTOMER',
       });
       
-      // Auto-login after registration
-      await authService.login({
-        email: registerData.email,
-        password: registerData.password,
+      console.log('Registration successful:', result);
+      console.log('Registration successful, waiting for auth state update...');
+      // The useEffect above will handle the success callback automatically
+    } catch (err) {
+      console.error('Registration error:', err);
+      console.error('Registration error details:', {
+        message: err.message,
+        response: err.response,
+        config: err.config,
+        stack: err.stack
       });
       
-      onSuccess();
-    } catch (err) {
-      setError(err.message || 'Registration failed');
+      if (err.code === 'NETWORK_ERROR' || err.message === 'Network Error') {
+        setError('Network error: Cannot connect to server. Please check if your backend is running.');
+      } else if (err.response?.status === 500) {
+        setError('Server error: Please try again later.');
+      } else if (err.response?.status === 400) {
+        setError(err.response?.data?.message || 'Invalid registration data.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
+
+  // Reset forms when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      setLoginData({ email: '', password: '' });
+      setRegisterData({
+        fullName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      });
+      setError('');
+      setLoading(false);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -132,11 +206,12 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="email"
                   id="login-email"
                   name="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   value={loginData.email}
                   onChange={handleLoginChange}
                   required
                   autoComplete="email"
+                  disabled={loading}
                 />
               </div>
 
@@ -146,15 +221,20 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="password"
                   id="login-password"
                   name="password"
-                  placeholder="••••••••"
+                  placeholder="Enter your password"
                   value={loginData.password}
                   onChange={handleLoginChange}
                   required
                   autoComplete="current-password"
+                  disabled={loading}
                 />
               </div>
 
-              <button type="submit" className="auth-modal-button" disabled={loading}>
+              <button 
+                type="submit" 
+                className="auth-modal-button" 
+                disabled={loading}
+              >
                 {loading ? (
                   <>
                     <span className="spinner"></span>
@@ -173,11 +253,12 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="text"
                   id="register-name"
                   name="fullName"
-                  placeholder="John Doe"
+                  placeholder="Enter your full name"
                   value={registerData.fullName}
                   onChange={handleRegisterChange}
                   required
                   autoComplete="name"
+                  disabled={loading}
                 />
               </div>
 
@@ -187,11 +268,12 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="email"
                   id="register-email"
                   name="email"
-                  placeholder="you@example.com"
+                  placeholder="Enter your email"
                   value={registerData.email}
                   onChange={handleRegisterChange}
                   required
                   autoComplete="email"
+                  disabled={loading}
                 />
               </div>
 
@@ -201,13 +283,15 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="password"
                   id="register-password"
                   name="password"
-                  placeholder="••••••••"
+                  placeholder="Create a password"
                   value={registerData.password}
                   onChange={handleRegisterChange}
                   required
                   minLength="6"
                   autoComplete="new-password"
+                  disabled={loading}
                 />
+                <small className="password-hint">Must be at least 6 characters</small>
               </div>
 
               <div className="form-group">
@@ -216,15 +300,20 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
                   type="password"
                   id="register-confirm"
                   name="confirmPassword"
-                  placeholder="••••••••"
+                  placeholder="Confirm your password"
                   value={registerData.confirmPassword}
                   onChange={handleRegisterChange}
                   required
                   autoComplete="new-password"
+                  disabled={loading}
                 />
               </div>
 
-              <button type="submit" className="auth-modal-button" disabled={loading}>
+              <button 
+                type="submit" 
+                className="auth-modal-button" 
+                disabled={loading}
+              >
                 {loading ? (
                   <>
                     <span className="spinner"></span>
@@ -244,8 +333,13 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
               <>
                 Don't have an account?{' '}
                 <button
+                  type="button"
                   className="auth-switch-btn"
-                  onClick={() => setActiveTab('register')}
+                  onClick={() => {
+                    setActiveTab('register');
+                    setError('');
+                  }}
+                  disabled={loading}
                 >
                   Create one
                 </button>
@@ -254,8 +348,13 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
               <>
                 Already have an account?{' '}
                 <button
+                  type="button"
                   className="auth-switch-btn"
-                  onClick={() => setActiveTab('login')}
+                  onClick={() => {
+                    setActiveTab('login');
+                    setError('');
+                  }}
+                  disabled={loading}
                 >
                   Sign in
                 </button>

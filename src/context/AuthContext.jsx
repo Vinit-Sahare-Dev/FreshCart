@@ -29,6 +29,9 @@ export function AuthProvider({ children }) {
 
   const register = async (userData) => {
     const response = await authService.register(userData);
+    // After successful registration, get user from token
+    const userDataFromToken = authService.getCurrentUser();
+    setUser(userDataFromToken);
     return response;
   };
 

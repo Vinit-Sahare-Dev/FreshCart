@@ -1,17 +1,23 @@
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart, updateQuantity, clearCart } from './cartSlice'
+import { useAuth } from '../context/AuthContext'
+import AuthModal from './AuthModal'
 import QRScanner from './QRScanner'
+import OrderConfirmation from './OrderConfirmation'
 import './Cart.css'
 
 const GST_RATE = 0.18
 
 function Cart() {
   const dispatch = useDispatch()
+  const { isAuthenticated } = useAuth()
   const { items: cartItems, totalAmount, totalItems } = useSelector(state => state.cart)
   
-  // QR Scanner state
+  // Modals state
+  const [showAuthModal, setShowAuthModal] = useState(false)
   const [showQRScanner, setShowQRScanner] = useState(false)
+  const [showOrderConfirmation, setShowOrderConfirmation] = useState(false)
 
   // Coupon / discount state
   const [couponCode, setCouponCode] = useState('')
@@ -84,10 +90,29 @@ function Cart() {
 
   const handlePaymentSuccess = () => {
     setShowQRScanner(false)
-    // Clear cart after successful payment
-    dispatch(clearCart())
-    // You can add a success notification here
-    console.log('Payment successful! Order placed.')
+    setShowOrderConfirmation(true)
+    // Clear cart after 3 seconds
+    setTimeout(() => {
+      dispatch(clearCart())
+      setAppliedCoupon(null)
+      setDiscountAmount(0)
+      setCouponCode('')
+    }, 3000)
+  }
+
+  const handlePlaceOrderWithoutPayment = () => {
+    if (cartItems.length === 0) {
+      alert('Your cart is empty! Add some items first.')
+      return
+    }
+    setShowOrderConfirmation(true)
+    // Clear cart after 3 seconds
+    setTimeout(() => {
+      dispatch(clearCart())
+      setAppliedCoupon(null)
+      setDiscountAmount(0)
+      setCouponCode('')
+    }, 3000)
   }
 
   const proceedToCheckout = () => {
@@ -95,17 +120,49 @@ function Cart() {
       alert('Your cart is empty! Add some items first.')
       return
     }
+    
+    if (!isAuthenticated) {
+      setShowAuthModal(true)
+      return
+    }
+    
     setShowQRScanner(true)
   }
 
   return (
     <div className="cart-container">
+      {/* Auth Modal */}
+      {showAuthModal && (
+        <AuthModal 
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={() => {
+            setShowAuthModal(false)
+            // After successful login, proceed to checkout
+            setShowQRScanner(true)
+          }}
+        />
+      )}
+
       {/* QR Scanner Modal */}
       {showQRScanner && (
         <QRScanner 
           totalAmount={grandTotal}
           onClose={() => setShowQRScanner(false)}
           onPaymentSuccess={handlePaymentSuccess}
+        />
+      )}
+
+      {/* Order Confirmation Modal */}
+      {showOrderConfirmation && (
+        <OrderConfirmation 
+          isOpen={showOrderConfirmation}
+          onClose={() => setShowOrderConfirmation(false)}
+          orderDetails={{
+            totalAmount: grandTotal,
+            items: cartItems,
+            discount: discountAmount
+          }}
         />
       )}
 
@@ -258,12 +315,30 @@ function Cart() {
                   </div>
                 </div>
 
-                <button 
-                  className="checkout-btn"
-                  onClick={proceedToCheckout}
->
-                  🛍️ Proceed to Checkout
-                </button>
+                {/* Conditional buttons based on authentication */}
+                {isAuthenticated ? (
+                  <div className="checkout-buttons-group">
+                    <button 
+                      className="checkout-btn"
+                      onClick={proceedToCheckout}
+                    >
+                      🛍️ Proceed to Payment
+                    </button>
+                    <button 
+                      className="checkout-btn-alt"
+                      onClick={handlePlaceOrderWithoutPayment}
+                    >
+                      📦 Place Order (Demo)
+                    </button>
+                  </div>
+                ) : (
+                  <button 
+                    className="checkout-btn"
+                    onClick={proceedToCheckout}
+                  >
+                    🔐 Login to Proceed
+                  </button>
+                )}
               </div>
             </div>
           </>

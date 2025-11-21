@@ -4,6 +4,10 @@ import axiosInstance from '../config/axios.config';
 class AuthService {
   async register(userData) {
     const response = await axiosInstance.post('/auth/register', userData);
+    // Make sure to store the token after registration too
+    if (response.data.token) {
+      localStorage.setItem('hotel_jwt', response.data.token);
+    }
     return response.data;
   }
 
@@ -42,6 +46,11 @@ class AuthService {
 
   isAuthenticated() {
     return !!localStorage.getItem('hotel_jwt');
+  }
+
+  // Add this method to get the token
+  getToken() {
+    return localStorage.getItem('hotel_jwt');
   }
 }
 
