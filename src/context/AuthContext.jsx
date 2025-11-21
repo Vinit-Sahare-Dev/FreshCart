@@ -1,64 +1,58 @@
+// src/context/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { login as apiLogin, register as apiRegister } from '../api/authApi';
+import authService from '../services/authService';
 
 const AuthContext = createContext(null);
 
-const STORAGE_KEY = 'hotel_jwt';
-
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
-    if (storedToken) {
-      setToken(storedToken);
-      // TODO: Optionally decode JWT or fetch current user profile
-    }
-    setLoading(false);
+    const initAuth = () => {
+      if (authService.isAuthenticated()) {
+        const userData = authService.getCurrentUser();
+        setUser(userData);
+      }
+      setLoading(false);
+    };
+
+    initAuth();
   }, []);
 
-  const handleLogin = async (email, password) => {
-    const response = await apiLogin({ email, password });
-    if (response?.token) {
-      setToken(response.token);
-      if (typeof window !== 'undefined') {
-        localStorage.setItem(STORAGE_KEY, response.token);
-      }
-      // Basic user object; replace with decoded JWT or profile response later
-      setUser({ email });
-    }
+  const login = async (credentials) => {
+    const response = await authService.login(credentials);
+    const userData = authService.getCurrentUser();
+    setUser(userData);
+    return response;
   };
 
-  const handleLogout = () => {
-    setToken(null);
+  const register = async (userData) => {
+    const response = await authService.register(userData);
+    return response;
+  };
+
+  const logout = () => {
+    authService.logout();
     setUser(null);
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem(STORAGE_KEY);
-    }
-  };
-
-  const handleRegister = async (payload) => {
-    await apiRegister(payload);
-    // After registration, you can decide to auto-login or redirect to login page
   };
 
   const value = {
-    token,
     user,
-    isAuthenticated: !!token,
     loading,
-    login: handleLogin,
-    logout: handleLogout,
-    register: handleRegister,
+    isAuthenticated: !!user,
+    login,
+    register,
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
-  return ctx;
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 }

@@ -294,3 +294,31 @@
 * {
   transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
+
+
+.user-info {
+  background: rgba(255, 255, 255, 0.08);
+  cursor: default;
+  pointer-events: none;
+}
+
+.logout-btn {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, #b91c1c, #991b1b);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+}
+
+.register-link {
+  background: linear-gradient(135deg, #4caf50, #2d8a2d);
+  font-weight: 600;
+}
+
+.register-link:hover {
+  background: linear-gradient(135deg, #2d8a2d, #1a521a);
+}
