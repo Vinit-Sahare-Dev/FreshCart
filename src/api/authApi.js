@@ -13,3 +13,16 @@ export function register(user) {
     body: user,
   });
 }
+
+export function getUserProfile(userId) {
+  return apiRequest(`/api/users/${userId}`, {
+    method: 'GET',
+  });
+}
+
+export function updateUserProfile(userId, userData) {
+  return apiRequest(`/api/users/${userId}`, {
+    method: 'PUT',
+    body: userData,
+  });
+}

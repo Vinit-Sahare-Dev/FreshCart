@@ -82,9 +82,9 @@
   display: flex;
   align-items: center;
   background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem; /* increased from 1.5rem */
+  border-radius: 1.25rem; /* slightly larger radius */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12); /* slightly more prominent shadow */
   border: 1px solid #e5e7eb;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
@@ -92,17 +92,17 @@
 
 .cart-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.18);
   border-color: #c6f6d5;
 }
 
 .item-image {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 110px; /* increased from 80px */
+  height: 110px; /* increased from 80px */
   border-radius: 0.75rem;
   overflow: hidden;
-  margin-right: 1.5rem;
+  margin-right: 2rem; /* increased margin */
   flex-shrink: 0;
 }
 
@@ -172,12 +172,12 @@
 }
 
 .qty-btn {
-  width: 32px;
-  height: 32px;
+  width: 36px; /* reduced from 44px */
+  height: 36px;
   border: none;
   background: white;
-  border-radius: 0.375rem;
-  font-size: 1.2rem;
+  border-radius: 0.5rem; /* slightly more rounded */
+  font-size: 1.3rem; /* slightly smaller font */
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -187,11 +187,31 @@
   border: 1px solid #d1d5db;
   font-family: 'Inter', sans-serif;
 }
+<<<<<<< SEARCH
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f9fafb;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+=======
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* reduced gap */
+  background: #f9fafb;
+  padding: 0.3rem 0.5rem; /* reduced top and bottom padding */
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
 
 .qty-btn:hover {
   background: #f3f4f6;
   border-color: #9ca3af;
-  transform: scale(1.05);
+  transform: scale(1.1); /* more prominent hover scale */
 }
 
 .quantity {
@@ -216,14 +236,14 @@
   background: #fef2f2;
   border: 1px solid #fecaca;
   color: #dc2626;
-  width: 40px;
-  height: 40px;
-  border-radius: 0.5rem;
+  width: 50px; /* increased */
+  height: 50px;
+  border-radius: 0.75rem; /* more rounded */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* increased font size */
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
 }
@@ -231,8 +251,8 @@
 .remove-btn:hover {
   background: #dc2626;
   color: white;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  transform: scale(1.1);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.3);
 }
 
 /* Cart Actions */
@@ -248,20 +268,20 @@
   background: #fef2f2;
   color: #dc2626;
   border: 1px solid #fecaca;
-  padding: 0.875rem 1.75rem;
-  border-radius: 0.75rem;
+  padding: 1.25rem 2.5rem; /* increased padding */
+  border-radius: 1rem; /* more rounded */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Inter', sans-serif;
-  font-size: 1rem;
+  font-size: 1.15rem; /* larger font */
 }
 
 .clear-cart-btn:hover {
   background: #dc2626;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
 }
 
 .checkout-section {
@@ -269,6 +289,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 1.5rem;
+  padding-right: 1rem; /* added right padding */
 }
 
 /* Coupon & Price Summary */
@@ -434,16 +455,16 @@
   background: linear-gradient(135deg, #059669, #047857);
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 0.75rem;
-  font-size: 1.1rem;
+  padding: 1.4rem 3rem; /* increased padding */
+  border-radius: 1rem; /* larger radius */
+  font-size: 1.5rem; /* larger font */
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
+  gap: 0.75rem;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
