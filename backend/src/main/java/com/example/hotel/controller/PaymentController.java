@@ -25,5 +25,17 @@ public class PaymentController {
         return ResponseEntity.ok(Map.of("paymentId", clientSecretOrId));
     }
 
+    @PostMapping("/verify")
+    public ResponseEntity<Map<String, Object>> verifyPayment(@RequestParam String transactionId,
+                                                             @RequestParam BigDecimal amount) {
+        Map<String, Object> verificationResult = paymentService.verifyPayment(transactionId, amount);
+        
+        if ((Boolean) verificationResult.get("verified")) {
+            return ResponseEntity.ok(verificationResult);
+        } else {
+            return ResponseEntity.badRequest().body(verificationResult);
+        }
+    }
+
     // TODO: Add webhook endpoint once integrating real payment provider
 }

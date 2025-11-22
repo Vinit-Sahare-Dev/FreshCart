@@ -38,6 +38,17 @@ function Navbar() {
     navigate('/account');
   };
 
+  // Get user email and first letter for avatar
+  const getUserEmail = () => {
+    return user?.sub || user?.email || 'Account';
+  };
+
+  const getAvatarLetter = () => {
+    const email = getUserEmail();
+    if (email === 'Account') return 'U';
+    return email.charAt(0).toUpperCase();
+  };
+
   return (
     <>
       {/* Auth Modal */}
@@ -92,9 +103,14 @@ function Navbar() {
             <>
               <Link 
                 to="/account" 
-                className={`nav-link ${isActive('/account') ? 'active' : ''}`}
+                className={`nav-link account-link ${isActive('/account') ? 'active' : ''}`}
               >
-                👤 {user?.sub || 'Account'}
+                <div className="user-avatar">
+                  {getAvatarLetter()}
+                </div>
+                <span className="user-email">
+                  {getUserEmail()}
+                </span>
               </Link>
               <button 
                 onClick={handleLogout}
