@@ -31,7 +31,7 @@ function Veg() {
       name: 'Paneer Butter Masala',
       description: 'Cottage cheese in rich tomato gravy with butter',
       price: 280,
-      image: 'public/veg/paneer-butter-masala.jpg',
+      image: '/veg/paneer-butter-masala.jpg',
       fallback: '🧀',
       rating: 4.5,
       cookTime: '25 min'

@@ -7,11 +7,7 @@ import NonVeg from './components/NonVeg'
 import Dairy from './components/Dairy'
 import Cart from './components/Cart'
 import ProtectedRoute from './components/ProtectedRoute'
-import HomePage from './pages/HomePage'
-import MenuPage from './pages/MenuPage'
-import CartPage from './pages/CartPage'
-import CheckoutPage from './pages/CheckoutPage'
-import AuthModal from './components/AuthModal';
+import AuthModal from './components/AuthModal'
 
 function App() {
   const location = useLocation()
@@ -27,20 +23,22 @@ function App() {
       <main className="container mx-auto px-4 py-8">
         <Routes>
           {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/menu" element={<MenuPage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/veg" element={<Veg />} />
           <Route path="/non-veg" element={<NonVeg />} />
           <Route path="/dairy" element={<Dairy />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/AuthModal" element={<AuthModal />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/auth" element={<AuthModal />} />
 
           {/* Protected routes */}
           <Route
             path="/checkout"
             element={(
               <ProtectedRoute>
-                <CheckoutPage />
+                <div className="max-w-4xl mx-auto">
+                  <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+                  <p className="text-gray-600">Checkout functionality would go here...</p>
+                </div>
               </ProtectedRoute>
             )}
           />
