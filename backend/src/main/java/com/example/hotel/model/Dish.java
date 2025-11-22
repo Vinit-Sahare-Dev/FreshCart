@@ -28,7 +28,11 @@ public class Dish {
 
     private boolean available = true;
 
-    // Constructor
+    // Default Constructor - REQUIRED by JPA
+    public Dish() {
+    }
+
+    // Parameterized Constructor
     public Dish(String name, String description, BigDecimal price, String imageUrl, String category, boolean available) {
         this.name = name;
         this.description = description;
