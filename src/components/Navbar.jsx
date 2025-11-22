@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import ProfileSettings from './ProfileSettings';
 import './Navbar.css';
 
 function Navbar() {
@@ -12,6 +13,7 @@ function Navbar() {
   const { totalItems } = useSelector(state => state.cart);
   const { isAuthenticated, user, logout } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path;
@@ -19,32 +21,26 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    setShowProfileSettings(false);
     navigate('/');
   };
 
   const handleAccountClick = () => {
     if (isAuthenticated) {
-      // If authenticated, navigate to account page
-      navigate('/account');
+      setShowProfileSettings(true);
     } else {
-      // If not authenticated, show auth modal
       setShowAuthModal(true);
     }
   };
 
   const handleAuthSuccess = () => {
     setShowAuthModal(false);
-    // After successful auth, redirect to account page
-    navigate('/account');
+    setShowProfileSettings(true);
   };
 
-  // Get user email and first letter for avatar
-  const getUserEmail = () => {
-    return user?.sub || user?.email || 'Account';
-  };
-
+  // Get first letter for avatar
   const getAvatarLetter = () => {
-    const email = getUserEmail();
+    const email = user?.sub || user?.email || 'Account';
     if (email === 'Account') return 'U';
     return email.charAt(0).toUpperCase();
   };
@@ -56,6 +52,14 @@ function Navbar() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         onSuccess={handleAuthSuccess}
+      />
+      
+      {/* Profile Settings Modal */}
+      <ProfileSettings 
+        isOpen={showProfileSettings}
+        onClose={() => setShowProfileSettings(false)}
+        user={user}
+        logout={handleLogout}
       />
 
       <nav className="navbar">
@@ -93,40 +97,31 @@ function Navbar() {
           </Link>
           <Link 
             to="/cart" 
-            className={`nav-link ${isActive('/cart') ? 'active' : ''}`}
+            className={`nav-link cart-link ${isActive('/cart') ? 'active' : ''}`}
           >
             <span className="cart-icon">🛒</span>
             Cart {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
           </Link>
 
-          {isAuthenticated ? (
-            <>
-              <Link 
-                to="/account" 
-                className={`nav-link account-link ${isActive('/account') ? 'active' : ''}`}
-              >
-                <div className="user-avatar">
-                  {getAvatarLetter()}
-                </div>
-                <span className="user-email">
-                  {getUserEmail()}
-                </span>
-              </Link>
-              <button 
-                onClick={handleLogout}
-                className="nav-link logout-btn"
-              >
-                🚪 Logout
-              </button>
-            </>
-          ) : (
-            <button 
-              onClick={handleAccountClick}
-              className={`nav-link account-btn ${isActive('/account') ? 'active' : ''}`}
-            >
-              👤 Account
-            </button>
-          )}
+{isAuthenticated ? (
+  <button
+    onClick={handleAccountClick}
+    className={`nav-link ${isActive('/account') ? 'active' : ''}`}
+    aria-label="Open Profile Settings"
+    title="Profile"
+  >
+  👤
+  <span className="profile-caret">▼</span>
+  Profile
+  </button>
+) : (
+  <button 
+    onClick={handleAccountClick}
+    className={`nav-link ${isActive('/account') ? 'active' : ''}`}
+  >
+    👤 Account
+  </button>
+)}
         </div>
       </nav>
     </>

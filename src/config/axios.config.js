@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000,
+  timeout: 30000, // Increased timeout for slower connections
   withCredentials: false, // Changed to false - use Authorization header instead
 });
 
@@ -41,7 +41,16 @@ axiosInstance.interceptors.response.use(
     if (error.code === 'ECONNABORTED') {
       error.message = 'Request timeout - server not responding';
     } else if (error.code === 'ERR_NETWORK' || error.message === 'Network Error') {
-      error.message = 'Network error - cannot connect to server. Please check if backend is running on http://localhost:8080';
+      // Provide more helpful error message
+      const backendUrl = 'http://localhost:8080';
+      error.message = `Network error - cannot connect to server. 
+      
+Please check:
+1. Backend is running on ${backendUrl}
+2. No firewall is blocking the connection
+3. Try accessing ${backendUrl}/api/dishes in your browser
+
+To start backend: cd backend && mvn spring-boot:run -Dspring-boot.run.profiles=dev`;
     } else if (error.response?.status === 401) {
       localStorage.removeItem('hotel_jwt');
       window.location.href = '/';
