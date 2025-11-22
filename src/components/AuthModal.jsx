@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './AuthModal.css';
 
 function AuthModal({ isOpen, onClose, onSuccess }) {
-  const { user, isAuthenticated, login, register } = useAuth();
+  const { isAuthenticated, login, register } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -197,28 +197,14 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
       } else if (err.response?.status === 500) {
         errorMessage = 'Server error: Please try again later.';
       } else if (err.response?.status === 400) {
-        setError(err.response?.data?.message || 'Invalid registration data.');
-      } else {
-        // Better error handling
-      let errorMessage = 'Registration failed. Please try again.';
-      
-      if (err.response?.data?.message) {
+        errorMessage = err.response?.data?.message || 'Invalid registration data.';
+      } else if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       } else if (err.message) {
-        // Check if it's a network error
-        if (err.message.includes('Network error') || err.message.includes('ERR_NETWORK') || err.message.includes('cannot connect')) {
-          errorMessage = `Cannot connect to backend server. Please ensure:
-          
-1. Backend is running on http://localhost:8080
-2. Check the browser console for more details
-3. Try refreshing the page`;
-        } else {
-          errorMessage = err.message;
-        }
+        errorMessage = err.message;
       }
       
       setError(errorMessage);
-      }
     } finally {
       setLoading(false);
     }

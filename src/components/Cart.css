@@ -187,7 +187,6 @@
   border: 1px solid #d1d5db;
   font-family: 'Inter', sans-serif;
 }
-<<<<<<< SEARCH
 .quantity-controls {
   display: flex;
   align-items: center;
@@ -197,15 +196,22 @@
   border-radius: 0.5rem;
   border: 1px solid #e5e7eb;
 }
-=======
-.quantity-controls {
+
+.qty-btn {
+  width: 36px; /* reduced from 44px */
+  height: 36px;
+  border: none;
+  background: white;
+  border-radius: 0.5rem; /* slightly more rounded */
+  font-size: 1.3rem; /* slightly smaller font */
+  font-weight: 700;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* reduced gap */
-  background: #f9fafb;
-  padding: 0.3rem 0.5rem; /* reduced top and bottom padding */
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border: 1px solid #d1d5db;
+  font-family: 'Inter', sans-serif;
 }
 
 .qty-btn:hover {
@@ -289,7 +295,7 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 1.5rem;
-  padding-right: 1rem; /* added right padding */
+  padding-right: 2rem; /* increased right padding for better spacing */
 }
 
 /* Coupon & Price Summary */
@@ -455,19 +461,20 @@
   background: linear-gradient(135deg, #059669, #047857);
   color: white;
   border: none;
-  padding: 1.4rem 3rem; /* increased padding */
-  border-radius: 1rem; /* larger radius */
-  font-size: 1.5rem; /* larger font */
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.75rem;
   box-shadow: 0 6px 20px rgba(5, 150, 105, 0.4);
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .checkout-btn::before {
@@ -775,21 +782,21 @@
 .checkout-buttons-group {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  width: 100%;
+  gap: 0.75rem;
+  align-items: flex-end;
 }
 
 .checkout-btn-alt {
   background: linear-gradient(135deg, #ff6b35, #ff8e35);
   color: white;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -797,7 +804,9 @@
   font-family: 'Inter', sans-serif;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
 }
+
 
 .checkout-btn-alt::before {
   content: '';

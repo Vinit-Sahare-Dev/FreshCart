@@ -1,7 +1,24 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import './Home.css'
 
 function Home() {
+  const [showNotification, setShowNotification] = useState(false)
+
+  useEffect(() => {
+    // Check for profile saved message from sessionStorage
+    const profileSavedMessage = sessionStorage.getItem('profileSavedMessage')
+    if (profileSavedMessage) {
+      setShowNotification(true)
+      // Clear the message from sessionStorage
+      sessionStorage.removeItem('profileSavedMessage')
+      // Auto-hide notification after 5 seconds
+      const timer = setTimeout(() => {
+        setShowNotification(false)
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [])
   const categories = [
     {
       name: 'Vegetarian Delights',
@@ -25,6 +42,23 @@ function Home() {
 
   return (
     <div className="home-container">
+      {/* Profile Saved Notification */}
+      {showNotification && (
+        <div className="notification-banner success">
+          <div className="notification-content">
+            <span className="notification-icon">✓</span>
+            <span className="notification-text">Profile updated successfully!</span>
+            <button 
+              className="notification-close" 
+              onClick={() => setShowNotification(false)}
+              aria-label="Close notification"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className="home-hero">
         <h1 className="home-hero-title">

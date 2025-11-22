@@ -43,7 +43,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("User not found");
         }
-        existingUser.setFullName(userDto.getName());
+        existingUser.setFullName(userDto.getFullName());
         existingUser.setEmail(userDto.getEmail());
         // No role update allowed here for security reasons, you may add if needed
 

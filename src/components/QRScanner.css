@@ -638,7 +638,7 @@
 
 .simulate-payment-btn:hover,
 .retry-btn:hover {
-  background: linear-gradient(135deg, #5a09b8, #7126c9);
+  background: linear-gradient(135deg, #8a2be2, #7c1fb3);
   transform: translateY(-1px);
   box-shadow: 0 6px 16px rgba(110, 10, 214, 0.4);
 }

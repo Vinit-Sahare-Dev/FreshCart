@@ -36,7 +36,7 @@
   overflow-y: auto;
   position: relative;
   animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e2e8f0;
+  border: 2px solid #059669;
 }
 
 @keyframes modalSlideIn {
@@ -78,7 +78,7 @@
 .auth-modal-header {
   text-align: center;
   padding: 32px 32px 24px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   border-radius: 20px 20px 0 0;
   color: white;
   position: relative;
@@ -138,8 +138,8 @@
 }
 
 .auth-tab.active {
-  color: #667eea;
-  border-bottom-color: #667eea;
+  color: #059669;
+  border-bottom-color: #059669;
 }
 
 .auth-tab.active::after {
@@ -149,7 +149,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #059669, #047857);
 }
 
 .auth-modal-error {
@@ -228,24 +228,24 @@
 .form-group label {
   font-size: 0.9rem;
   font-weight: 600;
-  color: #374151;
+  color: #1f2937;
   margin-bottom: 2px;
 }
 
 .form-group input {
   padding: 12px 16px;
-  border: 2px solid #e2e8f0;
+  border: 2px solid #059669;
   border-radius: 12px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
   background: white;
-  color: #374151;
+  color: #1f2937;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #047857;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
   transform: translateY(-1px);
 }
 
@@ -254,7 +254,7 @@
 }
 
 .auth-modal-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -289,7 +289,7 @@
 
 .auth-modal-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.4);
 }
 
 .auth-modal-button:active:not(:disabled) {
@@ -330,7 +330,7 @@
 .auth-switch-btn {
   background: none;
   border: none;
-  color: #667eea;
+  color: #059669;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -338,7 +338,7 @@
 }
 
 .auth-switch-btn:hover {
-  color: #764ba2;
+  color: #047857;
 }
 
 /* Responsive Design */
