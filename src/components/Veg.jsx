@@ -12,20 +12,8 @@ function Veg() {
   const [popupMessage, setPopupMessage] = useState('')
   const [popupItem, setPopupItem] = useState(null)
 
-  // Dishes state
-  const [vegDishes, setVegDishes] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchDishes = async () => {
-      try {
-        const data = await dishService.getDishesByCategory('veg')
-        setVegDishes(data)
-        setLoading(false)
-      } catch (error) {
-        console.error('Failed to fetch veg dishes:', error)
-        // Fallback to static data if backend fails
-        setVegDishes([
+  // Dishes state - Initialize with fallback data
+  const fallbackVegDishes = [
     {
       id: 1,
       name: 'Paneer Butter Masala',
@@ -226,8 +214,22 @@ function Veg() {
       rating: 4.5,
       cookTime: '25 min'
     }
-  ])
-        setLoading(false)
+  ]
+
+  const [vegDishes, setVegDishes] = useState(fallbackVegDishes)
+
+  // Try to fetch from backend but don't block rendering
+  useEffect(() => {
+    const fetchDishes = async () => {
+      try {
+        console.log('Fetching veg dishes from backend...')
+        const data = await dishService.getDishesByCategory('veg')
+        console.log('Successfully fetched veg dishes:', data)
+        if (data && data.length > 0) {
+          setVegDishes(data)
+        }
+      } catch (error) {
+        console.warn('Backend unavailable, using fallback data:', error.message)
       }
     }
     fetchDishes()
