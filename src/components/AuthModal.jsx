@@ -4,11 +4,10 @@ import { useAuth } from '../context/AuthContext';
 import './AuthModal.css';
 
 function AuthModal({ isOpen, onClose, onSuccess }) {
-  const { isAuthenticated, login, register } = useAuth();
+  const { user, isAuthenticated, login, register } = useAuth();
   const [activeTab, setActiveTab] = useState('login');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
 
   const [loginData, setLoginData] = useState({
     email: '',
@@ -59,25 +58,13 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
     setError('');
 
     try {
-      const result = await login({
+      await login({
         email: loginData.email,
         password: loginData.password,
       });
       
-      console.log('Login successful:', result);
-      
-      // Show success message
-      setSuccessMessage('Login successful! Welcome back! 🎉');
-      setError('');
-      
-      // Reset form
-      setLoginData({ email: '', password: '' });
-      
-      // Wait a moment for auth state to update, then close
-      setTimeout(() => {
-        setSuccessMessage('');
-        // The useEffect above will handle closing and success callback
-      }, 1000);
+      console.log('Login successful, waiting for auth state update...');
+      // The useEffect above will handle the success callback automatically
     } catch (err) {
       console.error('Login error:', err);
       console.error('Login error details:', {
@@ -85,26 +72,7 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
         response: err.response,
         stack: err.stack
       });
-      
-      // Better error handling
-      let errorMessage = 'Login failed. Please check your credentials.';
-      
-      if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.message) {
-        // Check if it's a network error
-        if (err.message.includes('Network error') || err.message.includes('ERR_NETWORK') || err.message.includes('cannot connect')) {
-          errorMessage = `Cannot connect to backend server. Please ensure:
-          
-1. Backend is running on http://localhost:8080
-2. Check the browser console for more details
-3. Try refreshing the page`;
-        } else {
-          errorMessage = err.message;
-        }
-      }
-      
-      setError(errorMessage);
+      setError(err.response?.data?.message || err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -149,33 +117,8 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
       });
       
       console.log('Registration successful:', result);
-      
-      // Store email before resetting form
-      const registeredEmail = registerData.email;
-      
-      // Show success message
-      setSuccessMessage('Registration Done! 🎉 Welcome to FreshCart!');
-      setError('');
-      
-      // Reset form
-      setRegisterData({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      });
-      
-      // Wait 3 seconds then switch to login tab with email pre-filled
-      setTimeout(() => {
-        setSuccessMessage('');
-        // Switch to login tab so user can login
-        setActiveTab('login');
-        // Pre-fill email in login form
-        setLoginData({
-          email: registeredEmail,
-          password: ''
-        });
-      }, 3000);
+      console.log('Registration successful, waiting for auth state update...');
+      // The useEffect above will handle the success callback automatically
     } catch (err) {
       console.error('Registration error:', err);
       console.error('Registration error details:', {
@@ -185,26 +128,15 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
         stack: err.stack
       });
       
-      // Better error handling
-      let errorMessage = 'Registration failed. Please try again.';
-      
-      if (err.code === 'NETWORK_ERROR' || err.message === 'Network Error' || err.message.includes('Network error') || err.message.includes('ERR_NETWORK') || err.message.includes('cannot connect')) {
-        errorMessage = `Cannot connect to backend server. Please ensure:
-        
-1. Backend is running on http://localhost:8080
-2. Check the browser console for more details
-3. Try refreshing the page`;
+      if (err.code === 'NETWORK_ERROR' || err.message === 'Network Error') {
+        setError('Network error: Cannot connect to server. Please check if your backend is running.');
       } else if (err.response?.status === 500) {
-        errorMessage = 'Server error: Please try again later.';
+        setError('Server error: Please try again later.');
       } else if (err.response?.status === 400) {
-        errorMessage = err.response?.data?.message || 'Invalid registration data.';
-      } else if (err.response?.data?.message) {
-        errorMessage = err.response.data.message;
-      } else if (err.message) {
-        errorMessage = err.message;
+        setError(err.response?.data?.message || 'Invalid registration data.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Registration failed. Please try again.');
       }
-      
-      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -221,7 +153,6 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
         confirmPassword: '',
       });
       setError('');
-      setSuccessMessage('');
       setLoading(false);
     }
   }, [isOpen]);
@@ -244,7 +175,6 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
             onClick={() => {
               setActiveTab('login');
               setError('');
-              setSuccessMessage('');
             }}
           >
             Login
@@ -254,7 +184,6 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
             onClick={() => {
               setActiveTab('register');
               setError('');
-              setSuccessMessage('');
             }}
           >
             Register
@@ -265,13 +194,6 @@ function AuthModal({ isOpen, onClose, onSuccess }) {
           <div className="auth-modal-error">
             <span className="error-icon">⚠️</span>
             {error}
-          </div>
-        )}
-
-        {successMessage && (
-          <div className="auth-modal-success">
-            <span className="success-icon">✅</span>
-            {successMessage}
           </div>
         )}
 

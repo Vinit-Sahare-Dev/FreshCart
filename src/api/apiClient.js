@@ -24,23 +24,8 @@ export async function apiRequest(path, { method = 'GET', body, headers = {} } = 
   });
 
   if (!response.ok) {
-    let errorData;
-    const contentType = response.headers.get('content-type');
-    
-    try {
-      if (contentType && contentType.includes('application/json')) {
-        errorData = await response.json();
-      } else {
-        const errorText = await response.text();
-        errorData = { message: errorText || `Request failed with status ${response.status}` };
-      }
-    } catch (e) {
-      errorData = { message: `Request failed with status ${response.status}` };
-    }
-    
-    const error = new Error(JSON.stringify(errorData));
-    error.response = { data: errorData, status: response.status };
-    throw error;
+    const errorText = await response.text();
+    throw new Error(errorText || `Request failed with status ${response.status}`);
   }
 
   if (response.status === 204) return null;

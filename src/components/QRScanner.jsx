@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { verifyPayment } from '../api/paymentApi';
 import './QRScanner.css';
 
 const QRScanner = ({ totalAmount, onClose, onPaymentSuccess }) => {
   const [paymentStatus, setPaymentStatus] = useState('pending');
   const [countdown, setCountdown] = useState(30);
-  const [transactionId, setTransactionId] = useState('');
-  const [verificationError, setVerificationError] = useState('');
-  const [verifiedTransactionId, setVerifiedTransactionId] = useState('');
 
   // Generate a proper QR code data with your UPI ID
   const generateQRData = () => {
@@ -21,65 +17,13 @@ const QRScanner = ({ totalAmount, onClose, onPaymentSuccess }) => {
     return `upi://pay?pa=${transactionData.upi}&pn=${encodeURIComponent(transactionData.name)}&am=${transactionData.amount}&cu=${transactionData.currency}&tn=${transactionData.tn}`;
   };
 
-  // Verify payment with transaction ID
-  const handleVerifyPayment = async () => {
-    // Validate transaction ID
-    if (!transactionId || transactionId.trim().length < 8) {
-      setVerificationError('Please enter a valid transaction ID (minimum 8 characters) from your payment app');
-      return;
-    }
-
-    setVerificationError('');
-    setPaymentStatus('processing');
-
-    try {
-      // Verify payment with backend
-      const response = await verifyPayment(transactionId.trim(), totalAmount);
-      
-      if (response.verified) {
-        setVerifiedTransactionId(response.transactionId || transactionId.trim());
-        setPaymentStatus('success');
-        
-        // Call success callback after a delay
-        setTimeout(() => {
-          onPaymentSuccess();
-        }, 2000);
-      } else {
-        setPaymentStatus('pending');
-        setVerificationError(response.message || 'Payment verification failed. Please check your transaction ID and try again.');
-      }
-    } catch (error) {
-      setPaymentStatus('pending');
-      let errorMessage = 'Failed to verify payment. Please check your transaction ID and try again.';
-      
-      // Extract error message from response
-      if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        // Try to parse if it's a JSON string
-        try {
-          const errorData = JSON.parse(error.message);
-          errorMessage = errorData.message || errorMessage;
-        } catch (e) {
-          // If not JSON, use the message directly if it's reasonable
-          if (error.message.length < 200) {
-            errorMessage = error.message;
-          }
-        }
-      }
-      
-      setVerificationError(errorMessage);
-    }
-  };
-
-  // Simulate payment processing (for demo only)
+  // Simulate payment processing
   const simulatePayment = () => {
     setPaymentStatus('processing');
     
     // Simulate payment processing time
     setTimeout(() => {
       setPaymentStatus('success');
-      setVerifiedTransactionId(`DEMO_${Date.now().toString().slice(-8)}`);
       
       // Call success callback after a delay
       setTimeout(() => {
@@ -253,47 +197,8 @@ const QRScanner = ({ totalAmount, onClose, onPaymentSuccess }) => {
                   <div className="status-pending">
                     <div className="status-icon">📱</div>
                     <p>Waiting for payment scan...</p>
-                    <p className="payment-instruction">
-                      After completing payment, enter your <strong>Transaction ID/Reference Number</strong> from your payment app:
-                    </p>
-                    
-                    <div className="transaction-input-group">
-                      <input
-                        type="text"
-                        className="transaction-id-input"
-                        placeholder="Enter Transaction ID (e.g., UPI1234567890)"
-                        value={transactionId}
-                        onChange={(e) => {
-                          setTransactionId(e.target.value);
-                          setVerificationError('');
-                        }}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter') {
-                            handleVerifyPayment();
-                          }
-                        }}
-                      />
-                      {verificationError && (
-                        <div className="verification-error">
-                          ⚠️ {verificationError}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <button 
-                      className="payment-done-btn" 
-                      onClick={handleVerifyPayment}
-                      disabled={!transactionId || transactionId.trim().length < 8}
-                    >
-                      ✅ Verify Payment
-                    </button>
-                    
-                    <div className="demo-separator">
-                      <span>or</span>
-                    </div>
-                    
                     <button className="simulate-payment-btn" onClick={simulatePayment}>
-                      Simulate Payment (Demo - No Verification)
+                      Simulate Payment (Demo)
                     </button>
                   </div>
                 )}
@@ -309,11 +214,11 @@ const QRScanner = ({ totalAmount, onClose, onPaymentSuccess }) => {
                 {paymentStatus === 'success' && (
                   <div className="status-success">
                     <div className="success-icon">✅</div>
-                    <h3>Payment Verified Successfully!</h3>
-                    <p>Your payment of ₹{totalAmount} has been verified and processed successfully.</p>
+                    <h3>Payment Successful!</h3>
+                    <p>Your payment of ₹{totalAmount} has been processed successfully.</p>
                     <div className="transaction-details">
                       <div className="transaction-id">
-                        Transaction ID: {verifiedTransactionId || `TXN${Date.now().toString().slice(-8)}`}
+                        Transaction ID: TXN{Date.now().toString().slice(-8)}
                       </div>
                       <div className="transaction-time">
                         Time: {new Date().toLocaleTimeString()}

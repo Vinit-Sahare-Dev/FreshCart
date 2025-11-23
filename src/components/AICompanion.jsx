@@ -6,7 +6,7 @@ function AICompanion() {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hi! I'm Peko, your FreshCart food assistant. Ask me about veg, non-veg, desserts, pricing, or how to order!",
+      text: "Hi! I'm Peko 🎉 Your friendly FreshCart assistant. I can help you with menu items, orders, and recommendations!",
       sender: 'ai',
       timestamp: new Date()
     }
@@ -14,6 +14,7 @@ function AICompanion() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -24,7 +25,41 @@ function AICompanion() {
     scrollToBottom();
   }, [messages]);
 
-  // Call Spring AI backend
+  // Load chat history from localStorage
+  useEffect(() => {
+    const savedMessages = localStorage.getItem('peko_chat_history');
+    if (savedMessages) {
+      try {
+        const parsed = JSON.parse(savedMessages);
+        setMessages(parsed.map(msg => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        })));
+      } catch (err) {
+        console.error('Failed to load chat history:', err);
+      }
+    }
+  }, []);
+
+  // Save chat history to localStorage
+  useEffect(() => {
+    if (messages.length > 1) {
+      localStorage.setItem('peko_chat_history', JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  // Track unread messages
+  useEffect(() => {
+    if (!isOpen && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.sender === 'ai') {
+        setUnreadCount(prev => prev + 1);
+      }
+    } else if (isOpen) {
+      setUnreadCount(0);
+    }
+  }, [messages, isOpen]);
+
   const getAIResponse = async (userMessage) => {
     try {
       const response = await fetch('http://localhost:8080/api/ai/chat', {
@@ -33,13 +68,13 @@ function AICompanion() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ message: userMessage }),
-        signal: AbortSignal.timeout(10000) // 10 second timeout
+        signal: AbortSignal.timeout(10000)
       });
 
       if (!response.ok) {
         if (response.status === 404) {
           setError('Backend not running. Please start the Spring Boot server.');
-          return "Backend service not available. Please refresh and try again.";
+          return "I'm having trouble connecting right now. Please try again in a moment! 😊";
         }
         throw new Error(`HTTP ${response.status}`);
       }
@@ -51,33 +86,31 @@ function AICompanion() {
       console.error('AI error:', error);
       if (error.name === 'AbortError') {
         setError('Request timed out. Server might be slow.');
-        return "Request timed out. Please try again.";
+        return "The request took too long. Let's try again! ⏱️";
       }
       setError('Unable to reach AI service. Check if backend is running.');
-      return "Sorry, I couldn't process that. Try again in a moment!";
+      return "Oops! I couldn't process that. Try again in a moment! 🔄";
     }
   };
 
-  const handleSendMessage = async (e) => {
-    e.preventDefault();
+  const handleSendMessage = async (e, quickMessage = null) => {
+    if (e) e.preventDefault();
     
-    if (!inputValue.trim()) return;
+    const messageToSend = quickMessage || inputValue;
+    if (!messageToSend.trim()) return;
     
-    // Add user message
     const userMessage = {
       id: Date.now(),
-      text: inputValue,
+      text: messageToSend,
       sender: 'user',
       timestamp: new Date()
     };
     
-    const messageToSend = inputValue;
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
     setError(null);
     
-    // Get AI response from Spring backend
     setTimeout(async () => {
       const responseText = await getAIResponse(messageToSend);
       const aiResponse = {
@@ -91,17 +124,42 @@ function AICompanion() {
     }, 600);
   };
 
+  const handleQuickAction = (action) => {
+    handleSendMessage(null, action);
+  };
+
+  const clearChat = () => {
+    if (window.confirm('Clear all chat history?')) {
+      setMessages([{
+        id: 1,
+        text: "Chat cleared! How can I help you today? 😊",
+        sender: 'ai',
+        timestamp: new Date()
+      }]);
+      localStorage.removeItem('peko_chat_history');
+    }
+  };
+
+  const quickActions = [
+    "🌱 Show veg dishes",
+    "🍗 Show non-veg",
+    "🥛 Show desserts",
+    "💰 Today's offers"
+  ];
+
   return (
     <>
-      {/* Peko Chat Bubble Button */}
+      {/* Floating Button */}
       <button
         className={`peko-bubble ${isOpen ? 'open' : ''}`}
         onClick={() => setIsOpen(!isOpen)}
         title="Chat with Peko"
         aria-label="Open Peko chat"
       >
-        <span className="bubble-emoji">PEKO</span>
-        <span className="bubble-label">Chat</span>
+        <span className="bubble-emoji">🤖</span>
+        {unreadCount > 0 && !isOpen && (
+          <span className="notification-badge">{unreadCount}</span>
+        )}
       </button>
 
       {/* Chat Window */}
@@ -109,16 +167,37 @@ function AICompanion() {
         <div className="peko-window">
           <div className="peko-header">
             <div className="header-content">
-              <h3 className="peko-title">Peko</h3>
-              <p className="peko-subtitle">Food Assistant</p>
+              <span className="header-emoji">🤖</span>
+              <div className="header-text">
+                <h3 className="peko-title">Peko AI Assistant</h3>
+                <p className="peko-subtitle">Your Food Helper</p>
+                <div className="peko-status">
+                  <span className="status-dot"></span>
+                  <span>Online</span>
+                </div>
+              </div>
             </div>
             <button
               className="peko-close"
               onClick={() => setIsOpen(false)}
               aria-label="Close Peko"
             >
-              ✕
+              ×
             </button>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="quick-actions">
+            {quickActions.map((action, index) => (
+              <button
+                key={index}
+                className="quick-action-btn"
+                onClick={() => handleQuickAction(action)}
+                disabled={isTyping}
+              >
+                {action}
+              </button>
+            ))}
           </div>
 
           <div className="messages-container">
@@ -131,7 +210,9 @@ function AICompanion() {
             {messages.map((message) => (
               <div key={message.id} className={`message ${message.sender}`}>
                 <div className="message-avatar">
-                  <span className="avatar-text">{message.sender === 'ai' ? 'P' : '👤'}</span>
+                  <span className="avatar-text">
+                    {message.sender === 'ai' ? '🤖' : '👤'}
+                  </span>
                 </div>
                 <div className="message-content">
                   <p className="message-text">{message.text}</p>
@@ -147,7 +228,7 @@ function AICompanion() {
             {isTyping && (
               <div className="message ai typing">
                 <div className="message-avatar">
-                  <span className="avatar-text">P</span>
+                  <span className="avatar-text">🤖</span>
                 </div>
                 <div className="message-content">
                   <div className="typing-indicator">
@@ -166,7 +247,7 @@ function AICompanion() {
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask Peko anything..."
+              placeholder="Ask Peko anything... 💬"
               className="message-input"
               disabled={isTyping}
             />
@@ -176,12 +257,14 @@ function AICompanion() {
               disabled={!inputValue.trim() || isTyping}
               aria-label="Send message"
             >
-              <span>➤</span>
+              <span>🚀</span>
             </button>
           </form>
 
           <div className="peko-tips">
-            <p className="tips-text">Try asking about veg, non-veg, desserts, or how to order!</p>
+            <p className="tips-text">
+              💡 Ask about dishes, prices, delivery, or get personalized recommendations!
+            </p>
           </div>
         </div>
       )}

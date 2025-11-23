@@ -23,9 +23,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    // This bean is commented out to avoid conflict with SecurityConfig
-    // SecurityConfig has its own CORS configuration that takes precedence
-    /*
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -38,5 +35,4 @@ public class CorsConfig implements WebMvcConfigurer {
         source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
-    */
 }

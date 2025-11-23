@@ -9,6 +9,5 @@ import java.util.Map;
 public interface PaymentService {
     String createPayment(String orderId, BigDecimal amount);
     PaymentResponse processPayment(PaymentRequest paymentRequest);
-    Map<String, Object> verifyPayment(String transactionId, BigDecimal amount);
     // Add other payment methods as needed
 }
