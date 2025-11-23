@@ -6,7 +6,7 @@ import { getUserProfile, updateUserProfile } from '../api/authApi';
 
 function ProfileSettings({ isOpen, onClose }) {
   const navigate = useNavigate();
-  const { user, setUser, logout } = useAuth();
+  const { user, setUser, logout, updateUserProfile: updateProfileInContext } = useAuth();
   const [photoPreview, setPhotoPreview] = useState(null);
   const fileInputRef = useRef(null);
 
@@ -132,6 +132,9 @@ function ProfileSettings({ isOpen, onClose }) {
       };
       localStorage.setItem('userProfile', JSON.stringify(profileData));
       console.log('Profile saved to local storage:', profileData);
+      
+      // Update context with new profile info
+      updateProfileInContext(profileData);
       
       // Save success message to sessionStorage to show on home page
       sessionStorage.setItem('profileSavedMessage', 'Profile updated successfully!');

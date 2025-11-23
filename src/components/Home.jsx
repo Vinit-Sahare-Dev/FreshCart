@@ -123,20 +123,20 @@ function Home() {
         <div className="footer-container">
           <div className="footer-content">
             <div className="footer-section">
-              <h3 className="footer-title">FoodExpress</h3>
+              <h3 className="footer-title">FreshCart</h3>
               <p className="footer-desc">
                 Delivering restaurant-quality meals to your doorstep. Fresh, fast, and delicious.
               </p>
               <div className="social-links">
-                <a href="https://github.com" className="social-link" aria-label="GitHub">
+                <a href="https://github.com/Vinit-Sahare-Dev" className="social-link" aria-label="GitHub">
                   <span className="social-icon">🐙</span>
                   GitHub
                 </a>
-                <a href="https://linkedin.com" className="social-link" aria-label="LinkedIn">
+                <a href="https://linkedin.com/in/vinit-sahare" className="social-link" aria-label="LinkedIn">
                   <span className="social-icon">💼</span>
                   LinkedIn
                 </a>
-                <a href="mailto:hello@foodexpress.com" className="social-link" aria-label="Email">
+                <a href="mailto:vinit.sahare@email.com" className="social-link" aria-label="Email">
                   <span className="social-icon">📧</span>
                   Email
                 </a>
@@ -174,7 +174,7 @@ function Home() {
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2024 FoodExpress. All rights reserved. | Crafted with ❤️ for food lovers</p>
+            <p>&copy; 2024 FreshCart. All rights reserved. | Crafted with ❤️ by Vinit Sahare</p>
           </div>
         </div>
       </footer>

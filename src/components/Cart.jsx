@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCart, updateQuantity, clearCart } from './cartSlice'
 import { useAuth } from '../context/AuthContext'
@@ -11,7 +11,7 @@ const GST_RATE = 0.18
 
 function Cart() {
   const dispatch = useDispatch()
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user, saveCartToDatabase } = useAuth()
   const { items: cartItems, totalAmount, totalItems } = useSelector(state => state.cart)
   
   // Modals state
@@ -24,6 +24,13 @@ function Cart() {
   const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [discountAmount, setDiscountAmount] = useState(0)
   const [couponError, setCouponError] = useState('')
+
+  // Save cart to database when it changes and user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user && cartItems.length > 0) {
+      saveCartToDatabase(cartItems);
+    }
+  }, [cartItems, isAuthenticated, user, saveCartToDatabase])
 
   // Derived amounts
   const subtotal = totalAmount

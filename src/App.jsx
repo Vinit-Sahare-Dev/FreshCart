@@ -8,6 +8,7 @@ import Dairy from './components/Dairy'
 import Cart from './components/Cart'
 import ProtectedRoute from './components/ProtectedRoute'
 import AuthModal from './components/AuthModal'
+import AICompanion from './components/AICompanion'
 
 function App() {
   const location = useLocation()
@@ -47,6 +48,8 @@ function App() {
           <Route path="*" element={<Home />} />
         </Routes>
       </main>
+      {/* AI Companion - positioned globally */}
+      <AICompanion />
     </div>
   )
 }
