@@ -1,8 +1,7 @@
 package com.example.hotel.controller;
 
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class AIController {
 
-    @Autowired
+    @Autowired(required = false)
     private ChatModel chatModel;
 
     @PostMapping("/chat")
@@ -30,6 +29,13 @@ public class AIController {
                 return ResponseEntity.badRequest().body(response);
             }
 
+            // Check if ChatModel is available
+            if (chatModel == null) {
+                Map<String, String> response = new HashMap<>();
+                response.put("response", "AI service is not configured. Please contact the administrator.");
+                return ResponseEntity.ok(response);
+            }
+
             // Create a system prompt for Peko (food assistant)
             String systemPrompt = "You are Peko, a friendly food assistant for FreshCart restaurant. " +
                     "Keep responses short and simple (1-2 lines max). " +
@@ -39,10 +45,8 @@ public class AIController {
 
             String fullPrompt = systemPrompt + "\n\nUser: " + userMessage + "\n\nPeko:";
 
-            Message message = new UserMessage(fullPrompt);
-            org.springframework.ai.chat.model.ChatResponse chatResponse = chatModel.call(
-                    new Prompt(message)
-            );
+            // Call the AI model
+            ChatResponse chatResponse = chatModel.call(new Prompt(fullPrompt));
 
             String aiResponse = chatResponse.getResult().getOutput().getContent();
 
@@ -51,6 +55,9 @@ public class AIController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
+            System.err.println("AI Chat Error: " + e.getMessage());
+            e.printStackTrace();
+            
             Map<String, String> response = new HashMap<>();
             response.put("response", "Sorry, I couldn't process that. What food can I help you with?");
             return ResponseEntity.status(500).body(response);
