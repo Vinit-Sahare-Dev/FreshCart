@@ -156,3 +156,12 @@ public class AuthController {
         return error;
     }
 }
+
+@GetMapping("/health")
+public ResponseEntity<?> healthCheck() {
+    Map<String, String> response = new HashMap<>();
+    response.put("status", "OK");
+    response.put("message", "FreshCart Hotel Backend is running");
+    response.put("timestamp", String.valueOf(System.currentTimeMillis()));
+    return ResponseEntity.ok(response);
+}
