@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './Home.css'
 
 function Home() {
   const [showNotification, setShowNotification] = useState(false)
+  const videoRef = useRef(null)
 
   useEffect(() => {
     // Check for profile saved message from sessionStorage
@@ -18,7 +19,15 @@ function Home() {
       }, 5000)
       return () => clearTimeout(timer)
     }
+
+    // Auto-play video with muted audio
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log('Video autoplay failed:', error)
+      })
+    }
   }, [])
+
   const categories = [
     {
       name: 'Vegetarian Delights',
@@ -59,21 +68,39 @@ function Home() {
         </div>
       )}
 
-      {/* Hero Section */}
-      <section className="home-hero">
-        <h1 className="home-hero-title">
-          Restaurant Quality Food <span className="hero-highlight">Delivered</span>
-        </h1>
-        <p className="home-hero-subtitle">
-          Experience chef-crafted meals delivered hot and fresh to your doorstep. From gourmet dishes to comfort food.
-        </p>
-        <button className="home-shop-button">
-          Order Now 🚀
-        </button>
+      {/* Video Background Section */}
+      <section className="video-hero-section">
+        <div className="video-background">
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="background-video"
+          >
+            <source src="/bag.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="video-overlay"></div>
+        </div>
+        
+        {/* Hero Content Over Video */}
+        <div className="video-hero-content">
+          <h1 className="video-hero-title">
+            Restaurant Quality Food <span className="video-hero-highlight">Delivered</span>
+          </h1>
+          <p className="video-hero-subtitle">
+            Experience chef-crafted meals delivered hot and fresh to your doorstep. From gourmet dishes to comfort food.
+          </p>
+          <button className="video-hero-button">
+            Order Now 🚀
+          </button>
+        </div>
       </section>
 
       {/* Categories Section */}
-      <section style={{ marginBottom: '4rem' }}>
+      <section className="categories-section">
         <h2 className="section-title">
           Explore Our Menu
         </h2>
@@ -94,27 +121,29 @@ function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="home-features-grid">
-        <div className="home-feature-item">
-          <div className="home-feature-icon">
-            <span>🚀</span>
+      <section className="features-section">
+        <div className="home-features-grid">
+          <div className="home-feature-item">
+            <div className="home-feature-icon">
+              <span>🚀</span>
+            </div>
+            <h3 className="home-feature-title">Fast Delivery</h3>
+            <p className="home-feature-desc">30-minutes or free</p>
           </div>
-          <h3 className="home-feature-title">Fast Delivery</h3>
-          <p className="home-feature-desc">30-minutes or free</p>
-        </div>
-        <div className="home-feature-item">
-          <div className="home-feature-icon">
-            <span>👨‍🍳</span>
+          <div className="home-feature-item">
+            <div className="home-feature-icon">
+              <span>👨‍🍳</span>
+            </div>
+            <h3 className="home-feature-title">Chef Crafted</h3>
+            <p className="home-feature-desc">Restaurant quality meals</p>
           </div>
-          <h3 className="home-feature-title">Chef Crafted</h3>
-          <p className="home-feature-desc">Restaurant quality meals</p>
-        </div>
-        <div className="home-feature-item">
-          <div className="home-feature-icon">
-            <span>💳</span>
+          <div className="home-feature-item">
+            <div className="home-feature-icon">
+              <span>💳</span>
+            </div>
+            <h3 className="home-feature-title">Secure Payment</h3>
+            <p className="home-feature-desc">100% secure transactions</p>
           </div>
-          <h3 className="home-feature-title">Secure Payment</h3>
-          <p className="home-feature-desc">100% secure transactions</p>
         </div>
       </section>
 

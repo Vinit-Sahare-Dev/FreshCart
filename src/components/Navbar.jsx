@@ -24,23 +24,19 @@ function Navbar() {
 
   const handleAccountClick = () => {
     if (isAuthenticated) {
-      // If authenticated, navigate to account page
       navigate('/account');
     } else {
-      // If not authenticated, show auth modal
       setShowAuthModal(true);
     }
   };
 
   const handleAuthSuccess = () => {
     setShowAuthModal(false);
-    // After successful auth, redirect to account page
     navigate('/account');
   };
 
   return (
     <>
-      {/* Auth Modal */}
       <AuthModal 
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
@@ -80,19 +76,23 @@ function Navbar() {
           >
             🥛 Dairy
           </Link>
+          
+          {/* Cart Link with Count */}
           <Link 
             to="/cart" 
-            className={`nav-link ${isActive('/cart') ? 'active' : ''}`}
+            className={`nav-link cart-link ${isActive('/cart') ? 'active' : ''}`}
           >
             <span className="cart-icon">🛒</span>
-            Cart {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
+            Cart 
+            {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
           </Link>
 
+          {/* Account/Login Button */}
           {isAuthenticated ? (
             <>
               <Link 
                 to="/account" 
-                className={`nav-link ${isActive('/account') ? 'active' : ''}`}
+                className={`nav-link account-link ${isActive('/account') ? 'active' : ''}`}
               >
                 👤 {user?.sub || 'Account'}
               </Link>
@@ -106,9 +106,9 @@ function Navbar() {
           ) : (
             <button 
               onClick={handleAccountClick}
-              className={`nav-link account-btn ${isActive('/account') ? 'active' : ''}`}
+              className="nav-link login-btn"
             >
-              👤 Account
+              👤 Login
             </button>
           )}
         </div>
