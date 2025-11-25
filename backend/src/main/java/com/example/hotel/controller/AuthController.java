@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*", allowedHeaders = "*", allowCredentials = "false")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000"})
 public class AuthController {
 
     private final UserService userService;
@@ -32,6 +32,17 @@ public class AuthController {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
+    }
+
+    // Add this health endpoint INSIDE the class
+    @GetMapping("/health")
+    public ResponseEntity<?> healthCheck() {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "OK");
+        response.put("message", "FreshCart Hotel Backend is running");
+        response.put("timestamp", System.currentTimeMillis());
+        response.put("service", "Authentication Service");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -155,13 +166,4 @@ public class AuthController {
         error.put("status", "error");
         return error;
     }
-}
-
-@GetMapping("/health")
-public ResponseEntity<?> healthCheck() {
-    Map<String, String> response = new HashMap<>();
-    response.put("status", "OK");
-    response.put("message", "FreshCart Hotel Backend is running");
-    response.put("timestamp", String.valueOf(System.currentTimeMillis()));
-    return ResponseEntity.ok(response);
 }

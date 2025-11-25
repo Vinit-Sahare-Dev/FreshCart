@@ -1,3 +1,4 @@
+// src/App.jsx
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import Navbar from './components/Navbar'
@@ -5,6 +6,7 @@ import Home from './components/Home'
 import Veg from './components/Veg'
 import NonVeg from './components/NonVeg'
 import Dairy from './components/Dairy'
+import Beverages from './components/Beverages'
 import Cart from './components/Cart'
 import ProtectedRoute from './components/ProtectedRoute'
 import AuthModal from './components/AuthModal'
@@ -28,6 +30,7 @@ function App() {
           <Route path="/veg" element={<Veg />} />
           <Route path="/non-veg" element={<NonVeg />} />
           <Route path="/dairy" element={<Dairy />} />
+          <Route path="/beverages" element={<Beverages />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/auth" element={<AuthModal />} />
 

@@ -1,8 +1,9 @@
+/* src/components/Beverages.css */
 /* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
 
-/* Veg Component Styles */
-.veg-container {
+/* Beverages Component Styles */
+.beverages-container {
   max-width: 100rem;
   margin: 0 auto;
   padding: 1.5rem 1rem;
@@ -10,138 +11,12 @@
   position: relative;
 }
 
-/* Beautiful Popup Styles */
-.cart-popup {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e0e0e0;
-  z-index: 1000;
-  transform: translateX(400px);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  max-width: 350px;
-  overflow: hidden;
-}
-
-.cart-popup.show {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.popup-content {
-  display: flex;
-  align-items: flex-start;
-  padding: 1.25rem;
-  gap: 0.75rem;
-}
-
-.popup-icon {
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, #10b981, #059669);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  animation: bounce 0.6s ease;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-5px);
-  }
-  60% {
-    transform: translateY(-3px);
-  }
-}
-
-.popup-text {
-  flex: 1;
-}
-
-.popup-title {
-  font-weight: 700;
-  color: #1a3a1a;
-  font-size: 1.1rem;
-  margin-bottom: 0.25rem;
-  font-family: 'Inter', sans-serif;
-}
-
-.popup-message {
-  color: #4b5563;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
-}
-
-.popup-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.veg-tag {
-  background: #ecfdf5;
-  color: #065f46;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid #a7f3d0;
-}
-
-.popup-close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: #9ca3af;
-  cursor: pointer;
-  padding: 0;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.popup-close:hover {
-  background: #f3f4f6;
-  color: #374151;
-}
-
-.popup-progress {
-  height: 3px;
-  background: linear-gradient(90deg, #10b981, #059669);
-  width: 100%;
-  animation: progress 3s linear;
-}
-
-@keyframes progress {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
-}
-
-.veg-header {
+.beverages-header {
   margin-bottom: 2.5rem;
   text-align: center;
 }
 
-.veg-title {
+.beverages-title {
   font-size: 2.5rem;
   font-weight: 800;
   color: #1a3a1a;
@@ -152,7 +27,7 @@
   line-height: 1.2;
 }
 
-.veg-title::after {
+.beverages-title::after {
   content: '';
   position: absolute;
   bottom: -0.5rem;
@@ -160,14 +35,14 @@
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, #2d8a2d, #4caf50);
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
   border-radius: 2px;
 }
 
-.veg-subtitle {
+.beverages-subtitle {
   font-size: 1.25rem;
   color: #4a5568;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
   font-weight: 400;
   line-height: 1.6;
   max-width: 500px;
@@ -175,14 +50,50 @@
   margin-right: auto;
 }
 
-.page-info {
-  font-size: 0.9rem;
-  color: #6b7280;
-  font-weight: 500;
+/* Filters */
+.beverages-filters {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
-/* Grid Layout - Fixed height cards */
-.dishes-grid {
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filter-group label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+.filter-select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  color: #374151;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-select:hover {
+  border-color: #3b82f6;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Beverage Grid */
+.beverages-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
@@ -190,8 +101,8 @@
   align-items: stretch;
 }
 
-/* Dish Card - Keep original height but reduce internal spacing */
-.dish-card {
+/* Beverage Card */
+.beverage-card {
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -200,45 +111,45 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  height: 480px; /* Keep original height */
+  height: 480px;
   position: relative;
 }
 
-.dish-card::before {
+.beverage-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #2d8a2d, #4caf50);
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
-.dish-card:hover::before {
+.beverage-card:hover::before {
   transform: scaleX(1);
 }
 
-.dish-card:hover {
+.beverage-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-  border-color: #c6f6d5;
+  border-color: #bfdbfe;
 }
 
-/* Image Styles - Keep original size */
+/* Image Styles */
 .card-image {
-  height: 200px; /* Keep original height */
+  height: 200px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  background: #f8f9fa;
+  background: #f8fafc;
   flex-shrink: 0;
 }
 
-.dish-image {
+.beverage-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -246,11 +157,51 @@
   transition: transform 0.3s ease;
 }
 
-.dish-card:hover .dish-image {
+.beverage-card:hover .beverage-image {
   transform: scale(1.05);
 }
 
-/* Fallback Styles - Keep original size */
+/* Badges */
+.beverage-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.category-badge, .temp-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.category-badge.veg {
+  background: rgba(34, 197, 94, 0.9);
+  color: white;
+}
+
+.category-badge.non-veg {
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+}
+
+.temp-badge.hot {
+  background: rgba(249, 115, 22, 0.9);
+  color: white;
+}
+
+.temp-badge.cold {
+  background: rgba(59, 130, 246, 0.9);
+  color: white;
+}
+
+/* Fallback Styles */
 .image-fallback {
   display: flex;
   flex-direction: column;
@@ -258,13 +209,13 @@
   justify-content: center;
   height: 100%;
   width: 100%;
-  background: linear-gradient(135deg, #f0f9f0, #e8f5e8);
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
   padding: 0.75rem;
   flex-shrink: 0;
 }
 
 .fallback-emoji {
-  font-size: 3rem; /* Keep original size */
+  font-size: 3rem;
   margin-bottom: 0.5rem;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
@@ -277,7 +228,7 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Card Content - Reduce spacing between description and buttons */
+/* Card Content */
 .card-content {
   padding: 1.25rem;
   flex: 1;
@@ -286,15 +237,15 @@
   min-height: 0;
 }
 
-.dish-header {
+.beverage-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.5rem; /* Reduced from 0.75rem */
+  margin-bottom: 0.5rem;
   min-height: 3rem;
 }
 
-.dish-name {
+.beverage-name {
   font-size: 1.25rem;
   font-weight: 700;
   color: #1f2937;
@@ -310,7 +261,7 @@
   min-height: 2.5rem;
 }
 
-.dish-rating {
+.beverage-rating {
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -330,11 +281,11 @@
   font-size: 0.7rem;
 }
 
-.dish-description {
+.beverage-description {
   color: #6b7280;
   font-size: 0.9rem;
   line-height: 1.4;
-  margin-bottom: 0.5rem; /* Reduced from 1rem */
+  margin-bottom: 0.5rem;
   flex: 1;
   font-family: 'Inter', sans-serif;
   display: -webkit-box;
@@ -345,12 +296,12 @@
   min-height: 4.2rem;
 }
 
-.dish-meta {
-  margin-bottom: 0.75rem; /* Reduced from 1.25rem */
+.beverage-meta {
+  margin-bottom: 0.75rem;
   flex-shrink: 0;
 }
 
-.cook-time {
+.beverage-type {
   font-size: 0.8rem;
   color: #9ca3af;
   display: flex;
@@ -360,16 +311,17 @@
   font-weight: 500;
 }
 
-.dish-footer {
+.beverage-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem; /* Reduced from 0.75rem */
+  gap: 0.5rem;
   margin-top: auto;
   flex-shrink: 0;
   min-height: 3.5rem;
 }
 
+/* Price Section */
 .price-section {
   flex: 1;
   display: flex;
@@ -396,14 +348,14 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* Smaller quantity controls */
+/* Quantity Controls */
 .quantity-controls {
   display: flex;
   align-items: center;
-  gap: 0.375rem; /* Reduced from 0.5rem */
+  gap: 0.375rem;
   background: #f9fafb;
   border-radius: 0.5rem;
-  padding: 0.25rem 0.375rem; /* Reduced padding */
+  padding: 0.25rem 0.375rem;
   border: 1px solid #e5e7eb;
   flex-shrink: 0;
 }
@@ -411,9 +363,9 @@
 .quantity {
   font-weight: 600;
   color: #374151;
-  min-width: 1.5rem; /* Reduced from 2rem */
+  min-width: 1.5rem;
   text-align: center;
-  font-size: 0.9rem; /* Slightly smaller */
+  font-size: 0.9rem;
   font-family: 'Inter', sans-serif;
 }
 
@@ -448,36 +400,35 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #2d8a2d, #236b23);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
   flex: 1;
-  box-shadow: 0 4px 12px rgba(45, 138, 45, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 120px;
-  padding: 0.5rem 0.75rem 0.5rem 0.75rem; /* Adjusted padding */
-  margin-right: 0.25rem; /* Added margin to prevent touching border */
+  padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+  margin-right: 0.25rem;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #236b23, #1a521a);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(45, 138, 45, 0.4);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
 }
 
-/* Smaller increment/decrement buttons */
 .btn-outline {
   background: white;
   border: 1px solid #d1d5db;
   color: #374151;
-  width: 1.5rem; /* Reduced from 1.75rem */
-  height: 1.5rem; /* Reduced from 1.75rem */
+  width: 1.5rem;
+  height: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  font-size: 0.8rem; /* Smaller font */
+  font-size: 0.8rem;
   font-weight: 700;
   border-radius: 0.375rem;
   transition: all 0.3s ease;
@@ -503,12 +454,51 @@
 .add-to-cart-btn {
   white-space: nowrap;
   text-align: center;
-  padding: 0.5rem 0.75rem 0.5rem 0.75rem; /* Adjusted padding */
+  padding: 0.5rem 0.75rem 0.5rem 0.75rem;
   font-size: 0.85rem;
-  margin-left: 0.25rem; /* Added margin to prevent touching border */
+  margin-left: 0.25rem;
 }
 
-/* Pagination Styles */
+/* Popup Styles (Reuse from Veg.css with beverage theme) */
+.cart-popup .popup-icon {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.cart-popup .popup-progress {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+}
+
+.veg-tag {
+  background: #ecfdf5;
+  color: #065f46;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #a7f3d0;
+}
+
+.non-veg-tag {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #fecaca;
+}
+
+.temp-tag {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #bfdbfe;
+}
+
+/* Pagination Styles (Same as Veg.css) */
 .pagination {
   display: flex;
   justify-content: center;
@@ -532,17 +522,17 @@
 }
 
 .pagination-btn:hover:not(:disabled) {
-  background: #2d8a2d;
+  background: #3b82f6;
   color: white;
-  border-color: #2d8a2d;
+  border-color: #3b82f6;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(45, 138, 45, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
 .pagination-btn.active {
-  background: #2d8a2d;
+  background: #3b82f6;
   color: white;
-  border-color: #2d8a2d;
+  border-color: #3b82f6;
 }
 
 .pagination-btn:disabled {
@@ -563,38 +553,57 @@
   gap: 0.5rem;
 }
 
+.page-info {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .veg-container {
+  .beverages-container {
     padding: 1rem;
   }
   
-  .veg-title {
+  .beverages-title {
     font-size: 2rem;
   }
   
-  .veg-subtitle {
+  .beverages-subtitle {
     font-size: 1.125rem;
   }
   
-  .dishes-grid {
+  .beverages-filters {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .filter-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .beverages-grid {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.25rem;
   }
   
-  .dish-card {
-    height: 480px; /* Keep original height */
+  .beverage-card {
+    height: 480px;
   }
   
   .card-image {
-    height: 200px; /* Keep original height */
+    height: 200px;
   }
   
   .card-content {
     padding: 1rem;
   }
   
-  .dish-footer {
+  .beverage-footer {
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
@@ -613,19 +622,6 @@
     margin-bottom: 0.75rem;
   }
   
-  .btn {
-    padding: 0.75rem 1rem;
-  }
-  
-  .dish-name {
-    font-size: 1.125rem;
-    min-height: 2.2rem;
-  }
-  
-  .price {
-    font-size: 1.375rem;
-  }
-  
   .pagination {
     flex-direction: column;
     gap: 0.75rem;
@@ -634,161 +630,42 @@
   .page-numbers {
     order: -1;
   }
-  
-  /* Mobile popup */
-  .cart-popup {
-    top: 10px;
-    right: 10px;
-    left: 10px;
-    max-width: none;
-  }
 }
 
 @media (max-width: 480px) {
-  .dishes-grid {
+  .beverages-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  .dish-card {
-    height: 460px; /* Slightly reduced for small mobile */
-  }
-  
-  .card-content {
-    padding: 1rem;
+  .beverage-card {
+    height: 460px;
   }
   
   .card-image {
-    height: 180px; /* Slightly reduced for small mobile */
+    height: 180px;
   }
   
-  .dish-header {
+  .beverage-header {
     flex-direction: column;
     gap: 0.5rem;
     min-height: auto;
   }
   
-  .dish-rating {
+  .beverage-rating {
     align-self: flex-start;
     margin-left: 0;
   }
   
-  .veg-title {
+  .beverages-title {
     font-size: 1.75rem;
   }
   
-  .veg-subtitle {
+  .beverages-subtitle {
     font-size: 1rem;
   }
   
   .fallback-emoji {
-    font-size: 2.5rem; /* Slightly reduced for small mobile */
+    font-size: 2.5rem;
   }
-  
-  .quantity-controls {
-    gap: 0.375rem;
-    padding: 0.25rem;
-  }
-  
-  .btn-outline {
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: 0.8rem;
-  }
-  
-  .quantity {
-    min-width: 1.5rem;
-    font-size: 0.9rem;
-  }
-  
-  .page-numbers {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .pagination-btn {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-  }
-  
-  .dish-description {
-    -webkit-line-clamp: 2;
-    min-height: 2.8rem;
-  }
-  
-  .btn-primary {
-    padding: 0.5rem 0.75rem 0.5rem 0.75rem;
-    margin-right: 0.15rem;
-  }
-}
-
-/* Loading animation for images */
-.dish-image {
-  transition: opacity 0.3s ease;
-}
-
-.dish-image:not([src]) {
-  opacity: 0;
-}
-
-/* Focus styles for accessibility */
-.btn:focus {
-  outline: 2px solid #2d8a2d;
-  outline-offset: 2px;
-}
-
-.btn-outline:focus {
-  outline: 2px solid #374151;
-  outline-offset: 2px;
-}
-
-.pagination-btn:focus {
-  outline: 2px solid #2d8a2d;
-  outline-offset: 2px;
-}
-
-/* Add these dairy-specific styles to your existing Veg.css */
-
-/* Dairy Popup Styles */
-.dairy-tag {
-  background: linear-gradient(135deg, #fef7ed, #fed7aa);
-  color: #c2410c;
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border: 1px solid #fdba74;
-}
-
-/* Dairy-specific color adjustments for the popup */
-.cart-popup .popup-icon {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-.cart-popup .popup-progress {
-  background: linear-gradient(90deg, #f59e0b, #d97706);
-}
-
-/* Dairy card specific adjustments */
-.dish-card .dairy-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: white;
-  padding: 0.25rem 0.75rem;
-  border-radius: 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
-}
-
-/* Optional: Dairy-specific hover effects */
-.dish-card:hover {
-  border-color: #fed7aa;
-}
-
-.dish-card:hover::before {
-  background: linear-gradient(90deg, #f59e0b, #d97706);
 }

@@ -56,25 +56,31 @@ function Navbar() {
             to="/" 
             className={`nav-link ${isActive('/') ? 'active' : ''}`}
           >
-            🏠 Home
+            Home
           </Link>
           <Link 
             to="/veg" 
             className={`nav-link ${isActive('/veg') ? 'active' : ''}`}
           >
-            🌱 Vegetarian
+            Vegetarian
           </Link>
           <Link 
             to="/non-veg" 
             className={`nav-link ${isActive('/non-veg') ? 'active' : ''}`}
           >
-            🍗 Non-Veg
+            Non-Veg
           </Link>
           <Link 
             to="/dairy" 
             className={`nav-link ${isActive('/dairy') ? 'active' : ''}`}
           >
-            🥛 Dairy
+            Desserts
+          </Link>
+          <Link 
+            to="/beverages" 
+            className={`nav-link ${isActive('/beverages') ? 'active' : ''}`}
+          >
+            Beverages
           </Link>
           
           {/* Cart Link with Count */}
@@ -90,17 +96,14 @@ function Navbar() {
           {/* Account/Login Button */}
           {isAuthenticated ? (
             <>
-              <Link 
-                to="/account" 
-                className={`nav-link account-link ${isActive('/account') ? 'active' : ''}`}
-              >
-                👤 {user?.sub || 'Account'}
-              </Link>
+              <div className="nav-link user-info">
+                {user?.sub || 'User'}
+              </div>
               <button 
                 onClick={handleLogout}
                 className="nav-link logout-btn"
               >
-                🚪 Logout
+                Logout
               </button>
             </>
           ) : (
@@ -108,7 +111,7 @@ function Navbar() {
               onClick={handleAccountClick}
               className="nav-link login-btn"
             >
-              👤 Login
+              Login
             </button>
           )}
         </div>
