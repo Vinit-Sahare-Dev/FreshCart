@@ -39,6 +39,16 @@ export function AuthProvider({ children }) {
     initAuth();
   }, []);
 
+  // Add this function to check user role
+  const getUserRole = () => {
+    return user?.role || 'CUSTOMER';
+  };
+
+  // Add this function to check if user is admin
+  const isAdmin = () => {
+    return getUserRole() === 'ADMIN';
+  };
+
   const login = async (credentials) => {
     try {
       console.log('🔐 Attempting login for:', credentials.email);
@@ -65,10 +75,20 @@ export function AuthProvider({ children }) {
             email: userData.sub,
             name: response.user?.fullName || 'User',
             fullName: response.user?.fullName || 'User',
+            role: userData.role || 'CUSTOMER'
           };
           setUserProfile(initialProfile);
           localStorage.setItem('userProfile', JSON.stringify(initialProfile));
         }
+
+        // Return user data with role for redirection logic
+        return {
+          ...response,
+          user: {
+            ...response.user,
+            role: userData.role || 'CUSTOMER'
+          }
+        };
       }
       
       return response;
@@ -98,6 +118,7 @@ export function AuthProvider({ children }) {
           fullName: userData.fullName || 'User',
           phone: userData.phone || '',
           city: userData.city || '',
+          role: userDataFromToken.role || 'CUSTOMER'
         };
         setUserProfile(initialProfile);
         localStorage.setItem('userProfile', JSON.stringify(initialProfile));
@@ -175,6 +196,8 @@ export function AuthProvider({ children }) {
     userProfile,
     loading,
     isAuthenticated: !!user,
+    isAdmin: isAdmin(),
+    getUserRole,
     login,
     register,
     logout,

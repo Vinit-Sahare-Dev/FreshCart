@@ -34,7 +34,6 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    // Add this health endpoint INSIDE the class
     @GetMapping("/health")
     public ResponseEntity<?> healthCheck() {
         Map<String, Object> response = new HashMap<>();
@@ -73,15 +72,25 @@ public class AuthController {
                     .body(createErrorResponse("Email already registered"));
             }
             
+            // Set default role to CUSTOMER if not provided
+            if (user.getRole() == null || user.getRole().trim().isEmpty()) {
+                user.setRole("CUSTOMER");
+            }
+            
             // Register the user
-            User registeredUser = userService.registerCustomer(user);
-            System.out.println("User registered successfully: " + registeredUser.getEmail());
+            User registeredUser;
+            if ("ADMIN".equals(user.getRole())) {
+                registeredUser = userService.registerAdmin(user);
+            } else {
+                registeredUser = userService.registerCustomer(user);
+            }
             
-            // Generate token for the new user
-            String token = jwtUtil.generateToken(registeredUser.getEmail());
-            System.out.println("Token generated for user: " + registeredUser.getEmail());
+            System.out.println("User registered successfully: " + registeredUser.getEmail() + " with role: " + registeredUser.getRole());
             
-            // Create user DTO
+            // FIX: Don't generate token or login after registration
+            // Just return success message without token
+            
+            // Create user DTO (without token)
             UserDto userDto = new UserDto(
                 registeredUser.getId(), 
                 registeredUser.getFullName(), 
@@ -89,8 +98,14 @@ public class AuthController {
                 registeredUser.getRole()
             );
             
-            // Return token and user info
-            return ResponseEntity.ok(new AuthResponse(token, userDto));
+            // Return success response without token
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Registration successful! Please login with your credentials.");
+            response.put("user", userDto);
+            // Note: No token is returned here
+            
+            return ResponseEntity.ok(response);
             
         } catch (Exception e) {
             System.err.println("Registration error: " + e.getMessage());
@@ -141,9 +156,9 @@ public class AuthController {
                 user.getRole()
             );
             
-            // Generate token
+            // Generate token (ONLY for login, not for registration)
             String token = jwtUtil.generateToken(request.getEmail());
-            System.out.println("Token generated for user: " + request.getEmail());
+            System.out.println("Token generated for user: " + request.getEmail() + " with role: " + user.getRole());
             
             return ResponseEntity.ok(new AuthResponse(token, userDto));
             
@@ -160,10 +175,48 @@ public class AuthController {
         }
     }
     
+    // Add this endpoint to manually create admin user
+    @PostMapping("/create-admin")
+    public ResponseEntity<?> createAdminUser() {
+        try {
+            User existingAdmin = userService.findByEmail("admin@hotel.com");
+            if (existingAdmin != null) {
+                return ResponseEntity.ok(createSuccessResponse("Admin user already exists: admin@hotel.com"));
+            }
+            
+            User adminUser = new User();
+            adminUser.setFullName("System Administrator");
+            adminUser.setEmail("admin@hotel.com");
+            adminUser.setPassword("Admin123!");
+            adminUser.setRole("ADMIN");
+            
+            User registeredAdmin = userService.registerAdmin(adminUser);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Admin user created successfully");
+            response.put("email", registeredAdmin.getEmail());
+            response.put("role", registeredAdmin.getRole());
+            
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(createErrorResponse("Failed to create admin user: " + e.getMessage()));
+        }
+    }
+    
     private Map<String, String> createErrorResponse(String message) {
         Map<String, String> error = new HashMap<>();
         error.put("message", message);
         error.put("status", "error");
         return error;
+    }
+    
+    private Map<String, String> createSuccessResponse(String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", message);
+        response.put("status", "success");
+        return response;
     }
 }

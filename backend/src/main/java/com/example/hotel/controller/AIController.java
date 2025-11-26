@@ -1,14 +1,9 @@
 package com.example.hotel.controller;
 
-import com.example.hotel.service.OpenAIService;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -16,90 +11,91 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class AIController {
 
-    @Autowired
-    private OpenAIService openAIService;
-
-    // Store conversation history per session (in production, use Redis or database)
-    private final Map<String, List<ChatMessage>> conversationSessions = new HashMap<>();
-
+    // Simple rule-based chatbot since Spring AI is commented out
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, Object>> chat(@RequestBody Map<String, Object> request) {
+    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> request) {
         try {
-            String userMessage = (String) request.getOrDefault("message", "");
-            String sessionId = (String) request.getOrDefault("sessionId", "default");
+            String userMessage = request.getOrDefault("message", "").toLowerCase().trim();
             
             if (userMessage.isEmpty()) {
-                Map<String, Object> response = new HashMap<>();
+                Map<String, String> response = new HashMap<>();
                 response.put("response", "Please provide a message.");
-                response.put("error", true);
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Get or create conversation history for this session
-            List<ChatMessage> history = conversationSessions.computeIfAbsent(
-                sessionId, k -> new ArrayList<>()
-            );
+            String aiResponse = generateResponse(userMessage);
 
-            // Get AI response
-            String aiResponse = openAIService.getChatCompletion(userMessage, history);
-
-            // Update conversation history
-            history.add(new ChatMessage("user", userMessage));
-            history.add(new ChatMessage("assistant", aiResponse));
-
-            // Keep only last 10 messages to prevent token overflow
-            if (history.size() > 10) {
-                history = new ArrayList<>(history.subList(history.size() - 10, history.size()));
-                conversationSessions.put(sessionId, history);
-            }
-
-            Map<String, Object> response = new HashMap<>();
+            Map<String, String> response = new HashMap<>();
             response.put("response", aiResponse);
-            response.put("sessionId", sessionId);
-            response.put("success", true);
-            
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             System.err.println("AI Chat Error: " + e.getMessage());
             e.printStackTrace();
             
-            Map<String, Object> response = new HashMap<>();
-            response.put("response", "I'm having technical difficulties. What can I help you with?");
-            response.put("error", true);
-            response.put("errorMessage", e.getMessage());
-            
-            return ResponseEntity.status(500).body(response);
-        }
-    }
-
-    @PostMapping("/recommend")
-    public ResponseEntity<Map<String, String>> getRecommendation(@RequestBody Map<String, String> request) {
-        try {
-            String preference = request.getOrDefault("preference", "any");
-            String dietaryRestriction = request.getOrDefault("dietaryRestriction", "none");
-
-            String recommendation = openAIService.getSmartRecommendation(preference, dietaryRestriction);
-
             Map<String, String> response = new HashMap<>();
-            response.put("recommendation", recommendation);
+            response.put("response", "I'm here to help! Ask me about our menu, prices, or how to order.");
             return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            System.err.println("Recommendation Error: " + e.getMessage());
-            
-            Map<String, String> response = new HashMap<>();
-            response.put("recommendation", "Unable to generate recommendations right now.");
-            return ResponseEntity.status(500).body(response);
         }
     }
 
-    @DeleteMapping("/session/{sessionId}")
-    public ResponseEntity<Map<String, String>> clearSession(@PathVariable String sessionId) {
-        conversationSessions.remove(sessionId);
+    private String generateResponse(String message) {
+        // Greetings
+        if (message.matches(".*(hi|hello|hey|greetings).*")) {
+            return "Hello! I'm Peko, your FreshCart food assistant. How can I help you today?";
+        }
         
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Session cleared successfully");
-        return ResponseEntity.ok(response);
+        // Menu questions
+        if (message.contains("menu") || message.contains("items") || message.contains("dishes")) {
+            return "We have vegetarian dishes, non-veg specials, and delicious dairy desserts. What would you like to know about?";
+        }
+        
+        // Vegetarian
+        if (message.contains("veg") && !message.contains("non")) {
+            return "Our veg menu includes Paneer Butter Masala (₹280), Vegetable Biryani (₹220), Palak Paneer (₹260), and more!";
+        }
+        
+        // Non-veg
+        if (message.contains("non") || message.contains("chicken") || message.contains("mutton") || message.contains("fish")) {
+            return "Try our Butter Chicken (₹320), Chicken Biryani (₹280), or Mutton Rogan Josh (₹450)!";
+        }
+        
+        // Desserts/Dairy
+        if (message.contains("dessert") || message.contains("sweet") || message.contains("dairy")) {
+            return "We have Gulab Jamun (₹120), Rasmalai (₹150), and Kheer (₹100) for dessert!";
+        }
+        
+        // Prices
+        if (message.contains("price") || message.contains("cost") || message.contains("expensive") || message.contains("cheap")) {
+            return "Our dishes range from ₹100 to ₹450. Most items are between ₹200-₹350.";
+        }
+        
+        // Ordering
+        if (message.contains("order") || message.contains("buy") || message.contains("purchase")) {
+            return "Browse our menu, add items to cart, and checkout. We accept UPI, cards, and cash on delivery!";
+        }
+        
+        // Delivery
+        if (message.contains("deliver") || message.contains("shipping") || message.contains("time")) {
+            return "We deliver in 30-45 minutes. Free delivery on orders above ₹300!";
+        }
+        
+        // Payment
+        if (message.contains("payment") || message.contains("pay") || message.contains("upi")) {
+            return "We accept UPI, Credit/Debit cards, and Cash on Delivery.";
+        }
+        
+        // Help
+        if (message.contains("help") || message.contains("support")) {
+            return "I can help with menu items, prices, ordering process, and delivery info. What would you like to know?";
+        }
+        
+        // Recommendations
+        if (message.contains("recommend") || message.contains("suggest") || message.contains("best")) {
+            return "Our bestsellers are Butter Chicken, Paneer Butter Masala, and Chicken Biryani!";
+        }
+        
+        // Default response
+        return "I can help you with our menu, prices, ordering, and delivery. What would you like to know?";
     }
 }

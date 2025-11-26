@@ -176,7 +176,7 @@ function AICompanion() {
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                
+                🗑️
               </button>
               <button
                 className="peko-close"

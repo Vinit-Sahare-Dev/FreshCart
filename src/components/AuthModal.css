@@ -222,6 +222,74 @@
   color: #9ca3af;
 }
 
+/* Login Options */
+.login-options {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -10px;
+}
+
+.forgot-password-btn {
+  background: none;
+  border: none;
+  color: #667eea;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+  padding: 4px 0;
+}
+
+.forgot-password-btn:hover {
+  color: #764ba2;
+}
+
+/* Admin Login Section */
+.admin-login-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.admin-divider {
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.admin-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.admin-divider span {
+  background: white;
+  padding: 0 12px;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.admin-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.admin-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+  line-height: 1.4;
+}
+
 .auth-modal-button {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -286,7 +354,7 @@
 }
 
 .auth-modal-footer {
-  padding: 0 32px 32px;
+  padding: 0;
   text-align: center;
 }
 
@@ -308,6 +376,12 @@
 
 .auth-switch-btn:hover {
   color: #764ba2;
+}
+
+.password-hint {
+  color: #6b7280;
+  font-size: 0.8rem;
+  margin-top: 4px;
 }
 
 /* Responsive Design */
@@ -353,4 +427,109 @@
 
 .auth-modal-container::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+/* Add these styles to your existing AuthModal.css */
+
+.admin-login-btn {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%) !important;
+  width: 100%;
+}
+
+.admin-login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(139, 69, 19, 0.4) !important;
+}
+
+
+
+/* Predefined credentials section */
+.predefined-credentials {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.predefined-credentials p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Admin login button specific styles */
+.admin-login-btn {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%) !important;
+}
+
+/* Predefined credentials section */
+.predefined-credentials {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.predefined-credentials p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Admin login button specific styles */
+.admin-login-btn {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%) !important;
+}
+
+.admin-login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(139, 69, 19, 0.4) !important;
+}
+
+/* Admin info section */
+.admin-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+/* Add this to your AuthModal.css */
+.auth-modal-success {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.auth-modal-success .error-icon {
+  color: #16a34a;
+}
+
+.admin-note {
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.admin-login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(139, 69, 19, 0.4) !important;
+}
+/* Make sure the admin info section has proper spacing */
+.admin-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.admin-note {
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.4;
 }
