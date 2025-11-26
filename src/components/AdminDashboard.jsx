@@ -1,694 +1,239 @@
 import { useState, useEffect } from 'react'
+import { useAuth } from '../context/AuthContext'
+import { useNavigate } from 'react-router-dom'
+import dishService from '../services/dishService'
+import orderService from '../services/orderService'
+import './AdminDashboard.css'
 
 function AdminDashboard() {
+  const { user, isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const [activeTab, setActiveTab] = useState('overview')
   const [dishes, setDishes] = useState([])
-  const [stats, setStats] = useState({})
+  const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
-  const [showModal, setShowModal] = useState(false)
-  const [editingDish, setEditingDish] = useState(null)
-  const [notification, setNotification] = useState({ show: false, message: '', type: '' })
-  const [user, setUser] = useState(null)
-  
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    price: '',
-    imageUrl: '',
-    category: 'veg',
-    available: true
-  })
+  const [error, setError] = useState('')
 
-  const API_URL = 'http://localhost:8080/api'
-
+  // Redirect if not admin
   useEffect(() => {
-    // Check authentication
-    const token = localStorage.getItem('hotel_jwt')
-    if (!token) {
-      window.location.href = '/'
-      return
+    if (!isAuthenticated || user?.role !== 'ADMIN') {
+      navigate('/')
     }
+  }, [isAuthenticated, user, navigate])
 
-    // Decode token to get user info
-    try {
-      const base64Url = token.split('.')[1]
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      )
-      const userData = JSON.parse(jsonPayload)
-      setUser(userData)
-
-      if (userData.role !== 'ADMIN') {
-        window.location.href = '/'
-        return
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        const [dishesData, ordersData] = await Promise.all([
+          dishService.getAllDishes(),
+          orderService.getAllOrders()
+        ])
+        setDishes(dishesData || [])
+        setOrders(ordersData || [])
+      } catch (err) {
+        setError('Failed to load data: ' + err.message)
+      } finally {
+        setLoading(false)
       }
-
-      loadData()
-    } catch (error) {
-      window.location.href = '/'
     }
+    fetchData()
   }, [])
 
-  const loadData = async () => {
-    try {
-      setLoading(true)
-      const token = localStorage.getItem('hotel_jwt')
-      
-      const [dishesRes, statsRes] = await Promise.all([
-        fetch(`${API_URL}/admin/dishes`, {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
-        fetch(`${API_URL}/admin/stats`, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-      ])
-
-      if (!dishesRes.ok || !statsRes.ok) {
-        throw new Error('Failed to load data')
-      }
-
-      const dishesData = await dishesRes.json()
-      const statsData = await statsRes.json()
-      
-      setDishes(dishesData)
-      setStats(statsData)
-    } catch (error) {
-      showNotification('Failed to load data: ' + error.message, 'error')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const showNotification = (message, type = 'success') => {
-    setNotification({ show: true, message, type })
-    setTimeout(() => setNotification({ show: false, message: '', type: '' }), 3000)
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const token = localStorage.getItem('hotel_jwt')
-      const dishData = {
-        ...formData,
-        price: parseFloat(formData.price)
-      }
-
-      const url = editingDish 
-        ? `${API_URL}/admin/dishes/${editingDish.id}` 
-        : `${API_URL}/admin/dishes`
-      
-      const method = editingDish ? 'PUT' : 'POST'
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(dishData)
-      })
-
-      if (!response.ok) {
-        throw new Error('Operation failed')
-      }
-
-      showNotification(editingDish ? 'Dish updated successfully!' : 'Dish created successfully!')
-      setShowModal(false)
-      setEditingDish(null)
-      resetForm()
-      loadData()
-    } catch (error) {
-      showNotification('Operation failed: ' + error.message, 'error')
-    }
-  }
-
-  const handleEdit = (dish) => {
-    setEditingDish(dish)
-    setFormData({
-      name: dish.name,
-      description: dish.description,
-      price: dish.price.toString(),
-      imageUrl: dish.imageUrl || '',
-      category: dish.category,
-      available: dish.available
-    })
-    setShowModal(true)
-  }
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this dish?')) return
-    
-    try {
-      const token = localStorage.getItem('hotel_jwt')
-      const response = await fetch(`${API_URL}/admin/dishes/${id}`, {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      if (!response.ok) {
-        throw new Error('Delete failed')
-      }
-
-      showNotification('Dish deleted successfully!')
-      loadData()
-    } catch (error) {
-      showNotification('Delete failed: ' + error.message, 'error')
-    }
-  }
-
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      description: '',
-      price: '',
-      imageUrl: '',
-      category: 'veg',
-      available: true
-    })
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('hotel_jwt')
-    window.location.href = '/'
-  }
-
-  const handleBack = () => {
-    window.location.href = '/'
+  // Calculate stats
+  const stats = {
+    totalDishes: dishes.length,
+    totalOrders: orders.length,
+    pendingOrders: orders.filter(o => o.status === 'PENDING').length,
+    completedOrders: orders.filter(o => o.status === 'COMPLETED').length,
+    totalRevenue: orders.reduce((sum, o) => sum + (o.totalAmount || 0), 0)
   }
 
   if (loading) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f9fafb' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ 
-            border: '3px solid #f3f3f3', 
-            borderTop: '3px solid #8b5cf6',
-            borderRadius: '50%',
-            width: '40px',
-            height: '40px',
-            animation: 'spin 1s linear infinite',
-            margin: '0 auto'
-          }}></div>
-          <p style={{ marginTop: '1rem', color: '#6b7280' }}>Loading dashboard...</p>
-        </div>
+      <div className="admin-loading">
+        <div className="spinner"></div>
+        <p>Loading dashboard...</p>
       </div>
     )
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f9fafb' }}>
-      {/* Notification */}
-      {notification.show && (
-        <div style={{
-          position: 'fixed',
-          top: '1rem',
-          right: '1rem',
-          zIndex: 50,
-          padding: '1rem 1.5rem',
-          borderRadius: '0.5rem',
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-          background: notification.type === 'error' ? '#ef4444' : '#10b981',
-          color: 'white',
-          animation: 'slideIn 0.3s ease-out'
-        }}>
-          {notification.message}
+    <div className="admin-dashboard">
+      <div className="admin-header">
+        <h1>Admin Dashboard</h1>
+        <p>Welcome back, {user?.fullName || user?.name}!</p>
+      </div>
+
+      {error && (
+        <div className="admin-error">
+          <span>⚠️</span> {error}
         </div>
       )}
 
-      {/* Header */}
-      <header style={{
-        background: 'linear-gradient(to right, #9333ea, #6366f1)',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-      }}>
-        <div style={{
-          maxWidth: '80rem',
-          margin: '0 auto',
-          padding: '1.5rem 2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: 'white', margin: 0 }}>
-              Admin Dashboard
-            </h1>
-            <p style={{ color: '#e9d5ff', marginTop: '0.25rem' }}>
-              Welcome back, {user?.sub || 'Admin'}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button
-              onClick={handleBack}
-              style={{
-                padding: '0.5rem 1.5rem',
-                background: 'rgba(255, 255, 255, 0.2)',
-                color: 'white',
-                borderRadius: '0.5rem',
-                fontWeight: '600',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.3)'}
-              onMouseOut={(e) => e.target.style.background = 'rgba(255, 255, 255, 0.2)'}
-            >
-              ← Back to Site
-            </button>
-            <button
-              onClick={handleLogout}
-              style={{
-                padding: '0.5rem 1.5rem',
-                background: 'white',
-                color: '#9333ea',
-                borderRadius: '0.5rem',
-                fontWeight: '600',
-                border: 'none',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => e.target.style.background = '#f5f3ff'}
-              onMouseOut={(e) => e.target.style.background = 'white'}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* Stats Cards */}
-      <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem' }}>
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '1.5rem',
-          marginBottom: '2rem'
-        }}>
-          <div style={{ background: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem', borderLeft: '4px solid #3b82f6' }}>
-            <h3 style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500', margin: 0 }}>Total Dishes</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>
-              {stats.totalDishes || 0}
-            </p>
-          </div>
-          <div style={{ background: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem', borderLeft: '4px solid #10b981' }}>
-            <h3 style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500', margin: 0 }}>Veg Dishes</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>
-              {stats.vegDishes || 0}
-            </p>
-          </div>
-          <div style={{ background: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem', borderLeft: '4px solid #ef4444' }}>
-            <h3 style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500', margin: 0 }}>Non-Veg Dishes</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>
-              {stats.nonVegDishes || 0}
-            </p>
-          </div>
-          <div style={{ background: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem', borderLeft: '4px solid #f59e0b' }}>
-            <h3 style={{ color: '#6b7280', fontSize: '0.875rem', fontWeight: '500', margin: 0 }}>Available</h3>
-            <p style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginTop: '0.5rem', margin: '0.5rem 0 0 0' }}>
-              {stats.availableDishes || 0}
-            </p>
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-icon">🍽️</div>
+          <div className="stat-info">
+            <h3>{stats.totalDishes}</h3>
+            <p>Total Dishes</p>
           </div>
         </div>
-
-        {/* Action Bar */}
-        <div style={{ background: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem', marginBottom: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', margin: 0 }}>
-              Manage Dishes
-            </h2>
-            <button
-              onClick={() => { setShowModal(true); setEditingDish(null); resetForm(); }}
-              style={{
-                padding: '0.75rem 1.5rem',
-                background: 'linear-gradient(to right, #9333ea, #6366f1)',
-                color: 'white',
-                borderRadius: '0.5rem',
-                fontWeight: '600',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.transform = 'translateY(-2px)'
-                e.target.style.boxShadow = '0 6px 12px -2px rgba(0, 0, 0, 0.2)'
-              }}
-              onMouseOut={(e) => {
-                e.target.style.transform = 'translateY(0)'
-                e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-              }}
-            >
-              + Add New Dish
-            </button>
+        <div className="stat-card">
+          <div className="stat-icon">📦</div>
+          <div className="stat-info">
+            <h3>{stats.totalOrders}</h3>
+            <p>Total Orders</p>
           </div>
         </div>
-
-        {/* Dishes Grid */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-          gap: '1.5rem' 
-        }}>
-          {dishes.map((dish) => (
-            <div key={dish.id} style={{
-              background: 'white',
-              borderRadius: '0.75rem',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-              overflow: 'hidden',
-              transition: 'transform 0.2s',
-              cursor: 'pointer'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)'
-              e.currentTarget.style.boxShadow = '0 10px 20px rgba(0,0,0,0.15)'
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)'
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-              <div style={{
-                height: '200px',
-                background: `linear-gradient(135deg, ${dish.category === 'veg' ? '#d1fae5' : dish.category === 'nonveg' ? '#fee2e2' : '#fef3c7'}, white)`,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '4rem'
-              }}>
-                {dish.category === 'veg' ? '🌱' : dish.category === 'nonveg' ? '🍗' : '🥛'}
-              </div>
-              <div style={{ padding: '1.5rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
-                  <h3 style={{ fontSize: '1.125rem', fontWeight: 'bold', color: '#111827', margin: 0, flex: 1 }}>
-                    {dish.name}
-                  </h3>
-                  <span style={{
-                    padding: '0.25rem 0.75rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.75rem',
-                    fontWeight: '600',
-                    background: dish.category === 'veg' ? '#d1fae5' : dish.category === 'nonveg' ? '#fee2e2' : '#fef3c7',
-                    color: dish.category === 'veg' ? '#065f46' : dish.category === 'nonveg' ? '#991b1b' : '#92400e',
-                    marginLeft: '0.5rem',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {dish.category}
-                  </span>
-                </div>
-                <p style={{ color: '#6b7280', fontSize: '0.875rem', marginBottom: '1rem', margin: '0 0 1rem 0' }}>
-                  {dish.description?.substring(0, 80)}...
-                </p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#111827' }}>
-                    ₹{dish.price}
-                  </span>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      onClick={() => handleEdit(dish)}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        background: '#6366f1',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.875rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseOver={(e) => {
-                        e.target.style.background = '#4f46e5'
-                        e.target.style.transform = 'scale(1.05)'
-                      }}
-                      onMouseOut={(e) => {
-                        e.target.style.background = '#6366f1'
-                        e.target.style.transform = 'scale(1)'
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(dish.id)}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        background: '#ef4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.875rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseOver={(e) => {
-                        e.target.style.background = '#dc2626'
-                        e.target.style.transform = 'scale(1.05)'
-                      }}
-                      onMouseOut={(e) => {
-                        e.target.style.background = '#ef4444'
-                        e.target.style.transform = 'scale(1)'
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+        <div className="stat-card">
+          <div className="stat-icon">⏳</div>
+          <div className="stat-info">
+            <h3>{stats.pendingOrders}</h3>
+            <p>Pending Orders</p>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">💰</div>
+          <div className="stat-info">
+            <h3>₹{stats.totalRevenue.toFixed(2)}</h3>
+            <p>Total Revenue</p>
+          </div>
         </div>
       </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.5)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 50,
-          padding: '1rem'
-        }} onClick={() => { setShowModal(false); setEditingDish(null); resetForm(); }}>
-          <div style={{
-            background: 'white',
-            borderRadius: '0.75rem',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            maxWidth: '32rem',
-            width: '100%',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }} onClick={(e) => e.stopPropagation()}>
-            <div style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb' }}>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', margin: 0 }}>
-                {editingDish ? 'Edit Dish' : 'Add New Dish'}
-              </h3>
-            </div>
-            
-            <div style={{ padding: '1.5rem' }}>
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                  Dish Name *
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.5rem',
-                    fontSize: '1rem',
-                    boxSizing: 'border-box'
-                  }}
-                  placeholder="Enter dish name"
-                />
-              </div>
+      {/* Tabs */}
+      <div className="admin-tabs">
+        <button
+          className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
+          onClick={() => setActiveTab('overview')}
+        >
+          Overview
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'dishes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('dishes')}
+        >
+          Dishes
+        </button>
+        <button
+          className={`tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => setActiveTab('orders')}
+        >
+          Orders
+        </button>
+      </div>
 
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                  Description *
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  required
-                  rows="3"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.5rem',
-                    fontSize: '1rem',
-                    resize: 'vertical',
-                    boxSizing: 'border-box'
-                  }}
-                  placeholder="Enter dish description"
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                    Price (₹) *
-                  </label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    required
-                    min="0"
-                    step="0.01"
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '0.5rem',
-                      fontSize: '1rem',
-                      boxSizing: 'border-box'
-                    }}
-                    placeholder="0.00"
-                  />
+      {/* Content */}
+      <div className="admin-content">
+        {activeTab === 'overview' && (
+          <div className="overview-section">
+            <h2>Recent Activity</h2>
+            <div className="recent-orders">
+              <h3>Latest Orders</h3>
+              {orders.slice(0, 5).map(order => (
+                <div key={order.id} className="order-item">
+                  <div>
+                    <strong>Order #{order.id}</strong>
+                    <p>{new Date(order.orderDate || order.createdAt).toLocaleString()}</p>
+                  </div>
+                  <div className="order-amount">₹{order.totalAmount}</div>
+                  <div className={`order-status status-${order.status.toLowerCase()}`}>
+                    {order.status}
+                  </div>
                 </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                    Category *
-                  </label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    required
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      border: '1px solid #d1d5db',
-                      borderRadius: '0.5rem',
-                      fontSize: '1rem',
-                      boxSizing: 'border-box'
-                    }}
-                  >
-                    <option value="veg">Vegetarian</option>
-                    <option value="nonveg">Non-Vegetarian</option>
-                    <option value="dairy">Dairy</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                  Image URL
-                </label>
-                <input
-                  type="text"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleInputChange}
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.5rem',
-                    fontSize: '1rem',
-                    boxSizing: 'border-box'
-                  }}
-                  placeholder="https://example.com/image.jpg"
-                />
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <input
-                  type="checkbox"
-                  name="available"
-                  checked={formData.available}
-                  onChange={handleInputChange}
-                  style={{ marginRight: '0.5rem', width: '1rem', height: '1rem' }}
-                />
-                <label style={{ fontSize: '0.875rem', color: '#111827', margin: 0 }}>
-                  Available for ordering
-                </label>
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', paddingTop: '1rem', borderTop: '1px solid #e5e7eb' }}>
-                <button
-                  onClick={() => { setShowModal(false); setEditingDish(null); resetForm(); }}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.5rem',
-                    color: '#374151',
-                    fontWeight: '600',
-                    background: 'white',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseOver={(e) => e.target.style.background = '#f9fafb'}
-                  onMouseOut={(e) => e.target.style.background = 'white'}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSubmit}
-                  style={{
-                    padding: '0.75rem 1.5rem',
-                    background: 'linear-gradient(to right, #9333ea, #6366f1)',
-                    color: 'white',
-                    borderRadius: '0.5rem',
-                    fontWeight: '600',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseOver={(e) => {
-                    e.target.style.transform = 'translateY(-2px)'
-                    e.target.style.boxShadow = '0 6px 12px -2px rgba(0, 0, 0, 0.2)'
-                  }}
-                  onMouseOut={(e) => {
-                    e.target.style.transform = 'translateY(0)'
-                    e.target.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-                  }}
-                >
-                  {editingDish ? 'Update Dish' : 'Create Dish'}
-                </button>
-              </div>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <style>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
+        {activeTab === 'dishes' && (
+          <div className="dishes-section">
+            <div className="section-header">
+              <h2>Manage Dishes</h2>
+              <button className="add-btn">+ Add New Dish</button>
+            </div>
+            <div className="dishes-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dishes.map(dish => (
+                    <tr key={dish.id}>
+                      <td>{dish.id}</td>
+                      <td>{dish.name}</td>
+                      <td>
+                        <span className={`category-badge ${dish.category}`}>
+                          {dish.category}
+                        </span>
+                      </td>
+                      <td>₹{dish.price}</td>
+                      <td>
+                        <span className={`availability ${dish.available ? 'available' : 'unavailable'}`}>
+                          {dish.available ? 'Yes' : 'No'}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="edit-btn">Edit</button>
+                        <button className="delete-btn">Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'orders' && (
+          <div className="orders-section">
+            <h2>All Orders</h2>
+            <div className="orders-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orders.map(order => (
+                    <tr key={order.id}>
+                      <td>#{order.id}</td>
+                      <td>{order.user?.fullName || 'Guest'}</td>
+                      <td>{new Date(order.orderDate || order.createdAt).toLocaleDateString()}</td>
+                      <td>₹{order.totalAmount}</td>
+                      <td>
+                        <span className={`order-status status-${order.status.toLowerCase()}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td>
+                        <button className="view-btn">View</button>
+                        <button className="update-btn">Update</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
