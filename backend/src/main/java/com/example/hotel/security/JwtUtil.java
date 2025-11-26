@@ -65,11 +65,10 @@ public class JwtUtil {
     }
 
     private Claims extractClaims(String token) {
-        return Jwts.parserBuilder()
+        // FIXED: Use parser() instead of parserBuilder() for JJWT 0.11.5
+        return Jwts.parser()
                 .setSigningKey(getSigningKey())
-                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }
