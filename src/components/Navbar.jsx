@@ -4,27 +4,24 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useAuth } from '../context/AuthContext';
 import AuthModal from './AuthModal';
+import ProfileSettings from './ProfileSettings';
 import './Navbar.css';
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { totalItems } = useSelector(state => state.cart);
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileSettings, setShowProfileSettings] = useState(false);
 
   const isActive = (path) => {
     return location.pathname === path;
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/');
-  };
-
-  const handleAccountClick = () => {
+  const handleProfileClick = () => {
     if (isAuthenticated) {
-      navigate('/account');
+      setShowProfileSettings(true);
     } else {
       setShowAuthModal(true);
     }
@@ -32,7 +29,10 @@ function Navbar() {
 
   const handleAuthSuccess = () => {
     setShowAuthModal(false);
-    navigate('/account');
+  };
+
+  const handleProfileClose = () => {
+    setShowProfileSettings(false);
   };
 
   return (
@@ -41,6 +41,11 @@ function Navbar() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         onSuccess={handleAuthSuccess}
+      />
+
+      <ProfileSettings 
+        isOpen={showProfileSettings}
+        onClose={handleProfileClose}
       />
 
       <nav className="navbar">
@@ -93,27 +98,20 @@ function Navbar() {
             {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
           </Link>
 
-          {/* Account/Login Button */}
-          {isAuthenticated ? (
-            <>
-              <div className="nav-link user-info">
-                {user?.sub || 'User'}
-              </div>
-              <button 
-                onClick={handleLogout}
-                className="nav-link logout-btn"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <button 
-              onClick={handleAccountClick}
-              className="nav-link login-btn"
-            >
-              Login
-            </button>
-          )}
+          {/* Single Profile/Login Button */}
+          <button 
+            onClick={handleProfileClick}
+            className={`nav-link profile-btn ${isAuthenticated ? 'authenticated' : ''}`}
+          >
+            {isAuthenticated ? (
+              <>
+                <span className="profile-icon">👤</span>
+                Profile
+              </>
+            ) : (
+              'Login'
+            )}
+          </button>
         </div>
       </nav>
     </>

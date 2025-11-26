@@ -13,11 +13,12 @@ function ProfileSettings({ isOpen, onClose }) {
   const [email, setEmail] = useState('N/A');
   const [name, setName] = useState('N/A');
   const [phone, setPhone] = useState('N/A');
-  const [city, setCity] = useState('N/A');
+  const [address, setAddress] = useState('N/A');
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
   const [messageType, setMessageType] = useState(''); // 'success' or 'error'
   const [loading, setLoading] = useState(false);
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   useEffect(() => {
     if (user && user.id) {
@@ -32,7 +33,7 @@ function ProfileSettings({ isOpen, onClose }) {
             setEmail(profileData.email || user.email || 'N/A');
             setName(profileData.name || user.name || 'N/A');
             setPhone(profileData.phone || 'N/A');
-            setCity(profileData.city || 'N/A');
+            setAddress(profileData.address || 'N/A');
             if (profileData.photoURL) {
               setPhotoPreview(profileData.photoURL);
             }
@@ -58,7 +59,7 @@ function ProfileSettings({ isOpen, onClose }) {
             setEmail(response.data.email || user.email || 'N/A');
             setName(response.data.name || response.data.fullName || user.name || 'N/A');
             setPhone(response.data.phone || response.data.phoneNumber || 'N/A');
-            setCity(response.data.city || 'N/A');
+            setAddress(response.data.address || 'N/A');
             if (response.data.photoURL) {
               setPhotoPreview(response.data.photoURL);
             }
@@ -67,7 +68,7 @@ function ProfileSettings({ isOpen, onClose }) {
             setEmail(user.email || 'N/A');
             setName(user.name || 'N/A');
             setPhone('N/A');
-            setCity('N/A');
+            setAddress('N/A');
           }
         })
         .catch(() => {
@@ -75,7 +76,7 @@ function ProfileSettings({ isOpen, onClose }) {
           setEmail(user.email || 'N/A');
           setName(user.name || 'N/A');
           setPhone('N/A');
-          setCity('N/A');
+          setAddress('N/A');
         })
         .finally(() => {
           setLoading(false);
@@ -89,7 +90,6 @@ function ProfileSettings({ isOpen, onClose }) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result);
-        // Here you could also upload photo to backend or storage
       };
       reader.readAsDataURL(file);
     }
@@ -100,17 +100,16 @@ function ProfileSettings({ isOpen, onClose }) {
     
     // Show saving state
     setSaving(true);
-    setSaveMessage('Saving your profile...');
+    setSaveMessage('Saving your changes...');
     setMessageType('');
     
     try {
       console.log('Saving profile for user:', user.id);
       const updatedData = {
-        fullName: name,  // Changed from 'name' to 'fullName' to match backend UserDto
+        fullName: name,
         email,
-        // Note: phone and city are not part of current UserDto, but sending anyway
         phone,
-        city,
+        address,
       };
       console.log('Updated data:', updatedData);
       
@@ -126,18 +125,14 @@ function ProfileSettings({ isOpen, onClose }) {
         name: responseData.name || responseData.fullName || name,
         email: responseData.email || email,
         phone: phone,
-        city: city,
+        address: address,
         photoURL: photoPreview,
         lastUpdated: new Date().toISOString(),
       };
       localStorage.setItem('userProfile', JSON.stringify(profileData));
-      console.log('Profile saved to local storage:', profileData);
       
       // Update context with new profile info
       updateProfileInContext(profileData);
-      
-      // Save success message to sessionStorage to show on home page
-      sessionStorage.setItem('profileSavedMessage', 'Profile updated successfully!');
       
       // Update auth context with new profile info
       setUser(prevUser => ({
@@ -146,41 +141,49 @@ function ProfileSettings({ isOpen, onClose }) {
         email: responseData.email || email,
       }));
       
+      // Show success popup
       setMessageType('success');
-      setSaveMessage('✓ Profile saved successfully!');
+      setSaveMessage('✓ Changes saved successfully!');
+      setShowSuccessPopup(true);
       
-      // Close modal after 1.5 seconds and redirect
+      // Reset saving state
+      setSaving(false);
+      
+      // Auto-hide success message after 3 seconds (but don't close modal)
       setTimeout(() => {
-        setSaving(false);
-        onClose();
-        // Redirect to home page
-        navigate('/');
-      }, 1500);
+        setShowSuccessPopup(false);
+        setSaveMessage('');
+      }, 3000);
+      
     } catch (error) {
       console.error('Error saving profile:', error);
-      console.error('Error details:', error.response || error.message);
       
       setMessageType('error');
-      setSaveMessage('✗ Failed to save profile. Please try again.');
+      setSaveMessage('✗ Failed to save changes. Please try again.');
+      setSaving(false);
       
       // Auto-hide error message after 5 seconds
       setTimeout(() => {
         setSaveMessage('');
         setMessageType('');
-        setSaving(false);
       }, 5000);
     }
+  };
+
+  const handleCloseWithPopup = () => {
+    setShowSuccessPopup(false);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
     <>
-      <div className="profile-overlay" onClick={onClose} />
+      <div className="profile-overlay" onClick={handleCloseWithPopup} />
       <div className="profile-modal" role="dialog" aria-modal="true" aria-labelledby="profile-title">
         <header className="profile-header">
           <h2 id="profile-title">Profile Settings</h2>
-          <button className="close-btn" onClick={onClose} aria-label="Close profile settings">&times;</button>
+          <button className="close-btn" onClick={handleCloseWithPopup} aria-label="Close profile settings">&times;</button>
         </header>
         <div className="profile-content">
           {loading ? (
@@ -241,28 +244,42 @@ function ProfileSettings({ isOpen, onClose }) {
                   />
                 </div>
                 <div className="info-item">
-                  <label htmlFor="city"><strong>City:</strong></label>
-                  <input
-                    id="city"
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder="N/A"
+                  <label htmlFor="address"><strong>Address:</strong></label>
+                  <textarea
+                    id="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Enter your full address"
+                    rows="3"
+                    className="address-textarea"
                   />
                 </div>
               </div>
-              {saveMessage && (
+              
+              {/* Success Popup */}
+              {showSuccessPopup && (
+                <div className="success-popup">
+                  <div className="popup-content">
+                    <span className="popup-icon">✓</span>
+                    <p className="popup-message">Changes saved successfully!</p>
+                  </div>
+                </div>
+              )}
+              
+              {/* Regular save message */}
+              {saveMessage && !showSuccessPopup && (
                 <p className={`save-message ${messageType}`}>
                   {saveMessage}
                 </p>
               )}
+              
               <div className="profile-actions">
                 <button
                   className="settings-btn save-btn"
                   onClick={handleSave}
                   disabled={saving}
                 >
-                  {saving ? 'Saving...' : 'Save Profile'}
+                  {saving ? 'Saving...' : 'Save Changes'}
                 </button>
                 <button className="logout-btn" onClick={() => { logout(); onClose(); }}>
                   Logout
