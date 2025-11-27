@@ -1,7 +1,7 @@
 /* Import Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
 
-/* Veg Component Styles */
+/* Veg Component Styles - Green Theme */
 .veg-container {
   max-width: 100rem;
   margin: 0 auto;
@@ -10,15 +10,15 @@
   position: relative;
 }
 
-/* Beautiful Popup Styles */
-.cart-popup {
+/* Beautiful Popup Styles - Green Theme */
+.veg-cart-popup {
   position: fixed;
   top: 20px;
   right: 20px;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 10px 30px rgba(34, 139, 34, 0.15);
+  border: 1px solid #bbf7d0;
   z-index: 1000;
   transform: translateX(400px);
   opacity: 0;
@@ -27,19 +27,19 @@
   overflow: hidden;
 }
 
-.cart-popup.show {
+.veg-cart-popup.show {
   transform: translateX(0);
   opacity: 1;
 }
 
-.popup-content {
+.veg-popup-content {
   display: flex;
   align-items: flex-start;
   padding: 1.25rem;
   gap: 0.75rem;
 }
 
-.popup-icon {
+.veg-popup-icon {
   font-size: 1.5rem;
   background: linear-gradient(135deg, #10b981, #059669);
   border-radius: 50%;
@@ -49,10 +49,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  animation: bounce 0.6s ease;
+  animation: veg-bounce 0.6s ease;
 }
 
-@keyframes bounce {
+@keyframes veg-bounce {
   0%, 20%, 50%, 80%, 100% {
     transform: translateY(0);
   }
@@ -64,42 +64,42 @@
   }
 }
 
-.popup-text {
+.veg-popup-text {
   flex: 1;
 }
 
-.popup-title {
+.veg-popup-title {
   font-weight: 700;
-  color: #1a3a1a;
+  color: #14532d;
   font-size: 1.1rem;
   margin-bottom: 0.25rem;
   font-family: 'Inter', sans-serif;
 }
 
-.popup-message {
+.veg-popup-message {
   color: #4b5563;
   font-size: 0.9rem;
   line-height: 1.4;
   margin-bottom: 0.5rem;
 }
 
-.popup-item {
+.veg-popup-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .veg-tag {
-  background: #ecfdf5;
-  color: #065f46;
+  background: #f0fdf4;
+  color: #166534;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.75rem;
   font-weight: 600;
-  border: 1px solid #a7f3d0;
+  border: 1px solid #bbf7d0;
 }
 
-.popup-close {
+.veg-popup-close {
   background: none;
   border: none;
   font-size: 1.5rem;
@@ -115,19 +115,19 @@
   transition: all 0.2s ease;
 }
 
-.popup-close:hover {
-  background: #f3f4f6;
+.veg-popup-close:hover {
+  background: #f0fdf4;
   color: #374151;
 }
 
-.popup-progress {
+.veg-popup-progress {
   height: 3px;
   background: linear-gradient(90deg, #10b981, #059669);
   width: 100%;
-  animation: progress 3s linear;
+  animation: veg-progress 3s linear;
 }
 
-@keyframes progress {
+@keyframes veg-progress {
   from {
     width: 100%;
   }
@@ -144,7 +144,7 @@
 .veg-title {
   font-size: 2.5rem;
   font-weight: 800;
-  color: #1a3a1a;
+  color: #14532d;
   margin-bottom: 0.75rem;
   font-family: 'Playfair Display', serif;
   letter-spacing: -0.02em;
@@ -160,7 +160,7 @@
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, #2d8a2d, #4caf50);
+  background: linear-gradient(90deg, #14532d, #22c55e);
   border-radius: 2px;
 }
 
@@ -180,7 +180,6 @@
   color: #6b7280;
   font-weight: 500;
 }
-
 /* Grid Layout - Fixed height cards */
 .dishes-grid {
   display: grid;
@@ -791,4 +790,96 @@
 
 .dish-card:hover::before {
   background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+/* Snacks Component - Orange/Amber Theme */
+
+/* Snacks Container */
+.snacks-container .snacks-title {
+  color: #ea580c;
+}
+
+.snacks-container .snacks-title::after {
+  background: linear-gradient(90deg, #ea580c, #f97316);
+}
+
+.snacks-container .snacks-header {
+  margin-bottom: 2.5rem;
+}
+
+/* Snacks Card Styling */
+.snacks-card::before {
+  background: linear-gradient(90deg, #ea580c, #f97316);
+}
+
+.snacks-card:hover {
+  border-color: #fed7aa;
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.15);
+}
+
+/* Snacks Popup */
+.snacks-popup .snacks-icon {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.snacks-popup .snacks-progress {
+  background: linear-gradient(90deg, #f97316, #ea580c);
+}
+
+/* Snacks Badge/Tag */
+.snacks-tag {
+  background: linear-gradient(135deg, #fff7ed, #fed7aa);
+  color: #c2410c;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #fed7aa;
+}
+
+/* Snacks Rating Badge */
+.snacks-rating {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.3);
+}
+
+/* Snacks Price Total */
+.snacks-total {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+/* Snacks Button */
+.snacks-btn {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+
+.snacks-btn:hover {
+  background: linear-gradient(135deg, #ea580c, #c2410c);
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.4);
+}
+
+/* Snacks Pagination */
+.snacks-container .pagination-btn:hover:not(:disabled) {
+  background: #ea580c;
+  border-color: #ea580c;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.3);
+}
+
+.snacks-container .pagination-btn.active {
+  background: #ea580c;
+  border-color: #ea580c;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+}
+
+/* Snacks Card Image Fallback */
+.snacks-card .image-fallback {
+  background: linear-gradient(135deg, #fff7ed, #fed7aa);
+}
+
+/* Snacks Quantity Controls */
+.snacks-card .quantity-controls {
+  background: #fff7ed;
+  border-color: #fed7aa;
 }

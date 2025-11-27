@@ -61,31 +61,37 @@ function Navbar() {
             to="/" 
             className={`nav-link ${isActive('/') ? 'active' : ''}`}
           >
-            Home
+             Home
           </Link>
           <Link 
             to="/veg" 
             className={`nav-link ${isActive('/veg') ? 'active' : ''}`}
           >
-            Vegetarian
+             Vegetarian
           </Link>
           <Link 
             to="/non-veg" 
             className={`nav-link ${isActive('/non-veg') ? 'active' : ''}`}
           >
-            Non-Veg
+             Non-Veg
           </Link>
           <Link 
             to="/dairy" 
             className={`nav-link ${isActive('/dairy') ? 'active' : ''}`}
           >
-            Desserts
+             Desserts
+          </Link>
+          <Link 
+            to="/snacks" 
+            className={`nav-link ${isActive('/snacks') ? 'active' : ''}`}
+          >
+             Snacks
           </Link>
           <Link 
             to="/beverages" 
             className={`nav-link ${isActive('/beverages') ? 'active' : ''}`}
           >
-            Beverages
+             Beverages
           </Link>
           
           {/* Cart Link with Count */}
@@ -95,7 +101,7 @@ function Navbar() {
           >
             <span className="cart-icon">🛒</span>
             Cart 
-            {totalItems > 0 && <span className="cart-count">({totalItems})</span>}
+            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
           </Link>
 
           {/* Single Profile/Login Button */}
@@ -109,7 +115,7 @@ function Navbar() {
                 Profile
               </>
             ) : (
-              'Login'
+              '🔐 Login'
             )}
           </button>
         </div>
