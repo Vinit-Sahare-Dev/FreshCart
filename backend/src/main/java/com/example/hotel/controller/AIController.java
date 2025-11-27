@@ -1,110 +1,105 @@
 package com.example.hotel.controller;
 
+import com.example.hotel.service.OpenAIService;
+import com.theokanning.openai.completion.chat.ChatMessage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/api/ai")
 @CrossOrigin(origins = "*")
 public class AIController {
 
-    private final Random random = new Random();
+    @Autowired
+    private OpenAIService openAIService;
+
+    // Store conversation history per session (in production, use Redis or database)
+    private final Map<String, List<ChatMessage>> conversationSessions = new HashMap<>();
 
     @PostMapping("/chat")
-    public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> chat(@RequestBody Map<String, Object> request) {
         try {
-            String userMessage = request.getOrDefault("message", "").toLowerCase();
+            String userMessage = (String) request.getOrDefault("message", "");
+            String sessionId = (String) request.getOrDefault("sessionId", "default");
             
             if (userMessage.isEmpty()) {
-                Map<String, String> response = new HashMap<>();
+                Map<String, Object> response = new HashMap<>();
                 response.put("response", "Please provide a message.");
+                response.put("error", true);
                 return ResponseEntity.badRequest().body(response);
             }
 
-            // Simple rule-based responses (mock AI until Spring AI is configured)
-            String aiResponse = generateMockResponse(userMessage);
+            // Get or create conversation history for this session
+            List<ChatMessage> history = conversationSessions.computeIfAbsent(
+                sessionId, k -> new ArrayList<>()
+            );
 
-            Map<String, String> response = new HashMap<>();
+            // Get AI response
+            String aiResponse = openAIService.getChatCompletion(userMessage, history);
+
+            // Update conversation history
+            history.add(new ChatMessage("user", userMessage));
+            history.add(new ChatMessage("assistant", aiResponse));
+
+            // Keep only last 10 messages to prevent token overflow
+            if (history.size() > 10) {
+                history = new ArrayList<>(history.subList(history.size() - 10, history.size()));
+                conversationSessions.put(sessionId, history);
+            }
+
+            Map<String, Object> response = new HashMap<>();
             response.put("response", aiResponse);
+            response.put("sessionId", sessionId);
+            response.put("success", true);
+            
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             System.err.println("AI Chat Error: " + e.getMessage());
             e.printStackTrace();
             
-            Map<String, String> response = new HashMap<>();
-            response.put("response", "Sorry, I couldn't process that. What food can I help you with?");
+            Map<String, Object> response = new HashMap<>();
+            response.put("response", "I'm having technical difficulties. What can I help you with?");
+            response.put("error", true);
+            response.put("errorMessage", e.getMessage());
+            
             return ResponseEntity.status(500).body(response);
         }
     }
 
-    private String generateMockResponse(String message) {
-        // Greeting responses
-        if (message.matches(".*\\b(hi|hello|hey)\\b.*")) {
-            return "Hello! I'm Peko, your food assistant. How can I help you today?";
+    @PostMapping("/recommend")
+    public ResponseEntity<Map<String, String>> getRecommendation(@RequestBody Map<String, String> request) {
+        try {
+            String preference = request.getOrDefault("preference", "any");
+            String dietaryRestriction = request.getOrDefault("dietaryRestriction", "none");
+
+            String recommendation = openAIService.getSmartRecommendation(preference, dietaryRestriction);
+
+            Map<String, String> response = new HashMap<>();
+            response.put("recommendation", recommendation);
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            System.err.println("Recommendation Error: " + e.getMessage());
+            
+            Map<String, String> response = new HashMap<>();
+            response.put("recommendation", "Unable to generate recommendations right now.");
+            return ResponseEntity.status(500).body(response);
         }
+    }
+
+    @DeleteMapping("/session/{sessionId}")
+    public ResponseEntity<Map<String, String>> clearSession(@PathVariable String sessionId) {
+        conversationSessions.remove(sessionId);
         
-        // Veg dishes
-        if (message.matches(".*\\b(veg|vegetarian)\\b.*")) {
-            return "We have delicious vegetarian options like Paneer Butter Masala, Vegetable Biryani, and Palak Paneer. What would you like to try?";
-        }
-        
-        // Non-veg dishes
-        if (message.matches(".*\\b(non.?veg|chicken|mutton|meat)\\b.*")) {
-            return "Our non-veg specials include Butter Chicken, Chicken Biryani, and Mutton Rogan Josh. All freshly prepared!";
-        }
-        
-        // Desserts/Dairy
-        if (message.matches(".*\\b(dessert|sweet|dairy)\\b.*")) {
-            return "Try our sweet treats like Gulab Jamun, Rasmalai, or Kheer. Perfect to end your meal!";
-        }
-        
-        // Price inquiries
-        if (message.matches(".*\\b(price|cost|how much)\\b.*")) {
-            return "Our dishes range from ₹100 to ₹450. Veg dishes start at ₹120, non-veg at ₹280. Check the menu for details!";
-        }
-        
-        // Delivery inquiries
-        if (message.matches(".*\\b(deliver|delivery)\\b.*")) {
-            return "Yes, we deliver! Free delivery on orders above ₹300. Delivery time is 30-45 minutes.";
-        }
-        
-        // Order inquiries
-        if (message.matches(".*\\b(order|how to)\\b.*")) {
-            return "Simply browse dishes, add to cart, and checkout. You'll need to login first. It's quick and easy!";
-        }
-        
-        // Popular dishes
-        if (message.matches(".*\\b(popular|recommend|suggest)\\b.*")) {
-            String[] suggestions = {
-                "Butter Chicken is our bestseller! Also try Paneer Butter Masala if you prefer vegetarian.",
-                "Chicken Biryani is very popular. For veg lovers, Vegetable Biryani is equally delicious!",
-                "Try our Mutton Rogan Josh if you like spicy food. It's a customer favorite!"
-            };
-            return suggestions[random.nextInt(suggestions.length)];
-        }
-        
-        // Spicy food
-        if (message.matches(".*\\b(spicy|hot)\\b.*")) {
-            return "Love spicy food? Try Mutton Rogan Josh or Chicken 65. We can adjust spice levels too!";
-        }
-        
-        // Thanks
-        if (message.matches(".*\\b(thank|thanks)\\b.*")) {
-            return "You're welcome! Feel free to ask if you need anything else. Enjoy your meal!";
-        }
-        
-        // Default response
-        String[] defaultResponses = {
-            "I can help you with our menu, prices, and ordering. What would you like to know?",
-            "Ask me about vegetarian, non-veg, or dessert options. I'm here to help!",
-            "Looking for something specific? I can recommend dishes or help you order."
-        };
-        
-        return defaultResponses[random.nextInt(defaultResponses.length)];
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Session cleared successfully");
+        return ResponseEntity.ok(response);
     }
 }
