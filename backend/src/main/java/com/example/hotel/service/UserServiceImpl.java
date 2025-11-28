@@ -21,21 +21,27 @@ public class UserServiceImpl implements UserService {
     @PostConstruct
     public void createDefaultAdmin() {
         try {
-            if (userRepository.findByEmail("admin@hotel.com").isEmpty()) {
+            User existingAdmin = userRepository.findByEmail("admin@hotel.com").orElse(null);
+            if (existingAdmin == null) {
                 User adminUser = new User();
                 adminUser.setFullName("System Administrator");
                 adminUser.setEmail("admin@hotel.com");
                 adminUser.setPassword(passwordEncoder.encode("Admin123!"));
                 adminUser.setRole("ADMIN");
                 adminUser.setEnabled(true);
-                
+
                 userRepository.save(adminUser);
                 System.out.println("✅ Default admin user created: admin@hotel.com");
             } else {
-                System.out.println("ℹ️ Admin user already exists: admin@hotel.com");
+                // Update existing admin user with correct password
+                existingAdmin.setPassword(passwordEncoder.encode("Admin123!"));
+                existingAdmin.setRole("ADMIN");
+                existingAdmin.setEnabled(true);
+                userRepository.save(existingAdmin);
+                System.out.println("✅ Admin user password updated: admin@hotel.com");
             }
         } catch (Exception e) {
-            System.err.println("❌ Failed to create admin user: " + e.getMessage());
+            System.err.println("❌ Failed to create/update admin user: " + e.getMessage());
             e.printStackTrace();
         }
     }
