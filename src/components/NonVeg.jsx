@@ -17,7 +17,7 @@ function NonVeg() {
       name: 'Butter Chicken',
       description: 'Tender chicken in rich buttery tomato gravy',
       price: 320,
-      image: 'public/nonveg/butter-chicken.jpg',
+      image: '/nonveg/butter-chicken.jpg',
       fallback: '🍗',
       rating: 4.8,
       cookTime: '30 min'
@@ -27,7 +27,7 @@ function NonVeg() {
       name: 'Chicken Biryani',
       description: 'Fragrant basmati rice with succulent chicken pieces',
       price: 280,
-      image: 'public/nonveg/chicken-biryani.jpg',
+      image: '/nonveg/chicken-biryani.jpg',
       fallback: '🍚',
       rating: 4.7,
       cookTime: '35 min'
@@ -37,7 +37,7 @@ function NonVeg() {
       name: 'Mutton Rogan Josh',
       description: 'Kashmiri style lamb curry with aromatic spices',
       price: 450,
-      image: 'public/nonveg/mutton-rogan-josh.jpg',
+      image: '/nonveg/mutton-rogan-josh.jpg',
       fallback: '🥩',
       rating: 4.6,
       cookTime: '45 min'
@@ -47,7 +47,7 @@ function NonVeg() {
       name: 'Fish Curry',
       description: 'Spicy coastal style fish in coconut gravy',
       price: 380,
-      image: 'public/nonveg/fish-curry.jpg',
+      image: '/nonveg/fish-curry.jpg',
       fallback: '🐟',
       rating: 4.5,
       cookTime: '25 min'
@@ -57,7 +57,7 @@ function NonVeg() {
       name: 'Chicken Tikka Masala',
       description: 'Grilled chicken chunks in creamy tomato sauce',
       price: 350,
-      image: 'public/nonveg/chicken-tikka-masala.jpeg',
+      image: '/nonveg/chicken-tikka-masala.jpeg',
       fallback: '🍢',
       rating: 4.7,
       cookTime: '30 min'
@@ -67,7 +67,7 @@ function NonVeg() {
       name: 'Prawn Fry',
       description: 'Crispy fried prawns with Indian spices',
       price: 420,
-      image: 'public/nonveg/prawn-fry.JPG',
+      image: '/nonveg/prawn-fry.JPG',
       fallback: '🦐',
       rating: 4.4,
       cookTime: '20 min'
@@ -77,7 +77,7 @@ function NonVeg() {
       name: 'Egg Curry',
       description: 'Boiled eggs in flavorful onion-tomato gravy',
       price: 180,
-      image: 'public/nonveg/egg-curry.jpeg',
+      image: '/nonveg/egg-curry.jpeg',
       fallback: '🥚',
       rating: 4.3,
       cookTime: '15 min'
@@ -87,7 +87,7 @@ function NonVeg() {
       name: 'Chicken Korma',
       description: 'Mild and creamy chicken curry with nuts',
       price: 340,
-      image: 'public/nonveg/chicken-korma.jpg',
+      image: '/nonveg/chicken-korma.jpg',
       fallback: '🍛',
       rating: 4.6,
       cookTime: '35 min'
@@ -97,7 +97,7 @@ function NonVeg() {
       name: 'Mutton Biryani',
       description: 'Aromatic rice with tender mutton pieces',
       price: 380,
-      image: 'public/nonveg/mutton-biryani.jpg',
+      image: '/nonveg/mutton-biryani.jpg',
       fallback: '🍖',
       rating: 4.8,
       cookTime: '50 min'
@@ -107,7 +107,7 @@ function NonVeg() {
       name: 'Chilli Chicken',
       description: 'Indo-Chinese style spicy chicken',
       price: 290,
-      image: 'public/nonveg/chilli-chicken.jpg',
+      image: '/nonveg/chilli-chicken.jpg',
       fallback: '🌶️',
       rating: 4.5,
       cookTime: '20 min'
@@ -117,7 +117,7 @@ function NonVeg() {
       name: 'Fish Fry',
       description: 'Crispy marinated fish fillets',
       price: 320,
-      image: 'public/nonveg/fish-fry.jpg',
+      image: '/nonveg/fish-fry.jpg',
       fallback: '🐠',
       rating: 4.4,
       cookTime: '18 min'
@@ -127,7 +127,7 @@ function NonVeg() {
       name: 'Chicken 65',
       description: 'Spicy deep-fried chicken appetizer',
       price: 260,
-      image: 'public/nonveg/chicken-65.jpeg',
+      image: '/nonveg/chicken-65.jpeg',
       fallback: '🔥',
       rating: 4.6,
       cookTime: '15 min'

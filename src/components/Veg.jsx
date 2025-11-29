@@ -29,7 +29,7 @@ function Veg() {
       name: 'Vegetable Biryani',
       description: 'Fragrant basmati rice with mixed vegetables and spices',
       price: 220,
-      image: 'public/veg/vegbiryani.jpg',
+      image: '/veg/vegbiryani.jpg',
       fallback: '🍚',
       rating: 4.3,
       cookTime: '30 min'
@@ -39,7 +39,7 @@ function Veg() {
       name: 'Palak Paneer',
       description: 'Cottage cheese in creamy spinach gravy',
       price: 260,
-      image: 'public/veg/palak-paneer.jpg',
+      image: '/veg/palak-paneer.jpg',
       fallback: '🥬',
       rating: 4.4,
       cookTime: '20 min'
@@ -49,7 +49,7 @@ function Veg() {
       name: 'Masala Dosa',
       description: 'Crispy rice crepe with spiced potato filling',
       price: 120,
-      image: 'public/veg/masala-dosa.jpg',
+      image: '/veg/masala-dosa.jpg',
       fallback: '🥞',
       rating: 4.7,
       cookTime: '10 min'
@@ -59,7 +59,7 @@ function Veg() {
       name: 'Chole Bhature',
       description: 'Spicy chickpeas with fluffy fried bread',
       price: 180,
-      image: 'public/veg/chole-bhature.jpg',
+      image: '/veg/chole-bhature.jpg',
       fallback: '🥘',
       rating: 4.6,
       cookTime: '15 min'
@@ -69,7 +69,7 @@ function Veg() {
       name: 'Vegetable Korma',
       description: 'Mixed vegetables in rich cashew gravy',
       price: 240,
-      image: 'public/veg/vegkorma.jpg',
+      image: '/veg/vegkorma.jpg',
       fallback: '🥗',
       rating: 4.2,
       cookTime: '25 min'
@@ -79,7 +79,7 @@ function Veg() {
       name: 'Aloo Gobi',
       description: 'Potato and cauliflower cooked with Indian spices',
       price: 160,
-      image: 'public/veg/aloo-gobi.jpg',
+      image: '/veg/aloo-gobi.jpg',
       fallback: '🥔',
       rating: 4.1,
       cookTime: '20 min'
@@ -89,7 +89,7 @@ function Veg() {
       name: 'Baingan Bharta',
       description: 'Smoky roasted eggplant mashed with spices',
       price: 190,
-      image: 'public/veg/baingan-bharta.jpg',
+      image: '/veg/baingan-bharta.jpg',
       fallback: '🍆',
       rating: 4.3,
       cookTime: '25 min'
@@ -99,7 +99,7 @@ function Veg() {
       name: 'Malai Kofta',
       description: 'Creamy vegetable dumplings in rich gravy',
       price: 290,
-      image: 'public/veg/malai-kofta.jpg',
+      image: '/veg/malai-kofta.jpg',
       fallback: '🍡',
       rating: 4.6,
       cookTime: '30 min'
@@ -109,7 +109,7 @@ function Veg() {
       name: 'Dal Makhani',
       description: 'Creamy black lentils simmered overnight',
       price: 200,
-      image: 'public/veg/dal-makhani.jpg',
+      image: '/veg/dal-makhani.jpg',
       fallback: '🫘',
       rating: 4.5,
       cookTime: '15 min'
@@ -119,7 +119,7 @@ function Veg() {
       name: 'Mutter Paneer',
       description: 'Cottage cheese with green peas in tomato gravy',
       price: 250,
-      image: 'public/veg/mutter-paneer.jpg',
+      image: '/veg/mutter-paneer.jpg',
       fallback: '🧀',
       rating: 4.4,
       cookTime: '20 min'
@@ -129,7 +129,7 @@ function Veg() {
       name: 'Vegetable Jalfrezi',
       description: 'Stir-fried vegetables in spicy tomato sauce',
       price: 210,
-      image: 'public/veg/veg-jalfrezi.jpg',
+      image: '/veg/veg-jalfrezi.jpg',
       fallback: '🥘',
       rating: 4.2,
       cookTime: '18 min'
@@ -139,7 +139,7 @@ function Veg() {
       name: 'Rajma Masala',
       description: 'Kidney beans in rich onion-tomato gravy',
       price: 170,
-      image: 'public/veg/rajma-masala.jpg',
+      image: '/veg/rajma-masala.jpg',
       fallback: '🫘',
       rating: 4.3,
       cookTime: '20 min'
@@ -149,7 +149,7 @@ function Veg() {
       name: 'Gobi Manchurian',
       description: 'Crispy cauliflower in tangy Chinese sauce',
       price: 190,
-      image: 'public/veg/gobi-manchurian.jpg',
+      image: '/veg/gobi-manchurian.jpg',
       fallback: '🥦',
       rating: 4.5,
       cookTime: '15 min'
@@ -159,7 +159,7 @@ function Veg() {
       name: 'Paneer Tikka',
       description: 'Grilled cottage cheese cubes with spices',
       price: 270,
-      image: 'public/veg/paneer-tikka.jpg',
+      image: '/veg/paneer-tikka.jpg',
       fallback: '🔥',
       rating: 4.7,
       cookTime: '12 min'
@@ -169,7 +169,7 @@ function Veg() {
       name: 'Vegetable Pulao',
       description: 'Fragrant rice with assorted vegetables',
       price: 150,
-      image: 'public/veg/veg-pulao.jpg',
+      image: '/veg/veg-pulao.jpg',
       fallback: '🍚',
       rating: 4.2,
       cookTime: '15 min'
@@ -179,7 +179,7 @@ function Veg() {
       name: 'Aloo Matar',
       description: 'Potatoes and peas in spicy gravy',
       price: 140,
-      image: 'public/veg/aloo-matar.jpg',
+      image: '/veg/aloo-matar.jpg',
       fallback: '🥔',
       rating: 4.0,
       cookTime: '18 min'
@@ -189,7 +189,7 @@ function Veg() {
       name: 'Bhindi Masala',
       description: 'Okra cooked with onions and spices',
       price: 160,
-      image: 'public/veg/bhindi-masala.jpg',
+      image: '/veg/bhindi-masala.jpg',
       fallback: '🥬',
       rating: 4.3,
       cookTime: '15 min'
@@ -199,7 +199,7 @@ function Veg() {
       name: 'Mushroom Matar',
       description: 'Mushrooms and peas in creamy gravy',
       price: 230,
-      image: 'public/veg/mushroom-matar.jpg',
+      image: '/veg/mushroom-matar.jpg',
       fallback: '🍄',
       rating: 4.4,
       cookTime: '20 min'
@@ -209,7 +209,7 @@ function Veg() {
       name: 'Vegetable Handi',
       description: 'Mixed vegetables cooked in clay pot',
       price: 260,
-      image: 'public/veg/veg-handi.jpg',
+      image: '/veg/veg-handi.jpg',
       fallback: '🍲',
       rating: 4.5,
       cookTime: '25 min'

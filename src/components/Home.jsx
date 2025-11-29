@@ -94,7 +94,7 @@ function Home() {
             Experience chef-crafted meals delivered hot and fresh to your doorstep. From gourmet dishes to comfort food.
           </p>
           <button className="video-hero-button">
-            Order Now 🚀
+            Order Now
           </button>
         </div>
       </section>
@@ -128,7 +128,7 @@ function Home() {
               <span>🚀</span>
             </div>
             <h3 className="home-feature-title">Fast Delivery</h3>
-            <p className="home-feature-desc">30-minutes or free</p>
+            <p className="home-feature-desc">30-minutes </p>
           </div>
           <div className="home-feature-item">
             <div className="home-feature-icon">
@@ -165,7 +165,7 @@ function Home() {
                   <span className="social-icon">💼</span>
                   LinkedIn
                 </a>
-                <a href="mailto:vinit.sahare@email.com" className="social-link" aria-label="Email">
+                <a href="mailto:vinit.sahare.dev@email.com" className="social-link" aria-label="Email">
                   <span className="social-icon">📧</span>
                   Email
                 </a>
@@ -195,15 +195,15 @@ function Home() {
             <div className="footer-section">
               <h4 className="footer-subtitle">Contact Info</h4>
               <div className="contact-info">
-                <p>📞 +1 (555) 123-4567</p>
-                <p>📧 hello@foodexpress.com</p>
-                <p>📍 123 Food Street, Flavor City</p>
+                <p>📞 +91 9921349614</p>
+                <p>📧 contact@freshcart.com</p>
+                <p>Ameerpeth,Hyderabad </p>
               </div>
             </div>
           </div>
           
           <div className="footer-bottom">
-            <p>&copy; 2024 FreshCart. All rights reserved. | Crafted with ❤️ by Vinit Sahare</p>
+            <p>&copy; 2025 FreshCart. All rights reserved. | Crafted with ❤️ by Vinit Sahare</p>
           </div>
         </div>
       </footer>

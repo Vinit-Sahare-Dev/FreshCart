@@ -7,14 +7,14 @@
 4. **Frontend-Backend Communication**: Axios config needed to be updated to match backend port
 
 ## Fixes Applied:
-- [x] Changed backend port from 8080 to 8083 to avoid conflicts
-- [x] Updated frontend axios config to use localhost:8083
+- [x] Backend port set to 8080
+- [x] Frontend axios config uses localhost:8080
 - [x] Fixed syntax errors in axios error handling
-- [x] Backend is now running successfully on port 8083
+- [x] Backend is now running successfully on port 8080
 
 ## Current Status:
 - ✅ Frontend is running on http://localhost:5174/
-- ✅ Backend is running on http://localhost:8083
+- ✅ Backend is running on http://localhost:8080
 - ✅ Database connection established (MySQL)
 - ✅ Basic application structure is working
 

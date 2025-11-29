@@ -17,7 +17,7 @@ function Dairy() {
       name: 'Gulab Jamun',
       description: 'Soft milk dumplings in sweet rose-flavored syrup',
       price: 120,
-      image: 'public/dairy/gulab-jamun.jpg',
+      image: '/dairy/gulab-jamun.jpg',
       fallback: '🍮',
       rating: 4.6,
       cookTime: '10 min'
@@ -27,7 +27,7 @@ function Dairy() {
       name: 'Rasmalai',
       description: 'Soft cottage cheese patties in sweetened creamy milk',
       price: 150,
-      image: 'public/dairy/rasmalai.jpg',
+      image: '/dairy/rasmalai.jpg',
       fallback: '🥛',
       rating: 4.5,
       cookTime: '5 min'
@@ -37,7 +37,7 @@ function Dairy() {
       name: 'Kheer',
       description: 'Creamy rice pudding with nuts and cardamom',
       price: 100,
-      image: 'public/dairy/kheer.jpg',
+      image: '/dairy/kheer.jpg',
       fallback: '🍚',
       rating: 4.4,
       cookTime: '15 min'
@@ -47,7 +47,7 @@ function Dairy() {
       name: 'Rasgulla',
       description: 'Spongy cottage cheese balls in light sugar syrup',
       price: 110,
-      image: 'public/dairy/rasgulla.jpg',
+      image: '/dairy/rasgulla.jpg',
       fallback: '⚪',
       rating: 4.7,
       cookTime: '8 min'
@@ -57,7 +57,7 @@ function Dairy() {
       name: 'Peda',
       description: 'Sweet milk fudge with saffron and cardamom',
       price: 180,
-      image: 'public/dairy/peda.jpg',
+      image: '/dairy/peda.jpg',
       fallback: '🍬',
       rating: 4.3,
       cookTime: '12 min'
