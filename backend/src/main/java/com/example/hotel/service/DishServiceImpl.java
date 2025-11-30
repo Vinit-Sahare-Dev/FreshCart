@@ -46,6 +46,7 @@ public class DishServiceImpl implements DishService {
         existingDish.setPrice(dishDTO.getPrice());
         existingDish.setCategory(dishDTO.getCategory());
         existingDish.setImageUrl(dishDTO.getImageUrl());
+        existingDish.setAvailable(dishDTO.isAvailable()); // ADDED
         
         Dish updatedDish = dishRepository.save(existingDish);
         return convertToDTO(updatedDish);
@@ -71,11 +72,20 @@ public class DishServiceImpl implements DishService {
         dto.setPrice(dish.getPrice());
         dto.setCategory(dish.getCategory());
         dto.setImageUrl(dish.getImageUrl());
+        dto.setAvailable(dish.isAvailable()); // ADDED
         return dto;
     }
 
     private Dish convertToEntity(DishDTO dto) {
-        Dish dish = new Dish(dto.getName(), dto.getDescription(), dto.getPrice(), dto.getImageUrl(), dto.getCategory(), true);
+        // FIXED: Use dto.isAvailable() instead of hardcoded true
+        Dish dish = new Dish(
+            dto.getName(), 
+            dto.getDescription(), 
+            dto.getPrice(), 
+            dto.getImageUrl(), 
+            dto.getCategory(), 
+            dto.isAvailable()  // FIXED
+        );
         return dish;
     }
 }

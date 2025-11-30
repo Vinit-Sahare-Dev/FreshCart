@@ -199,7 +199,7 @@ function Veg() {
       name: 'Mushroom Matar',
       description: 'Mushrooms and peas in creamy gravy',
       price: 230,
-      image: '/veg/mushroom-matar.jpg',
+      image: '/veg/mushroom-matar.jpg', // Changed from .svg to .jpg
       fallback: '🍄',
       rating: 4.4,
       cookTime: '20 min'
@@ -209,10 +209,10 @@ function Veg() {
       name: 'Vegetable Handi',
       description: 'Mixed vegetables cooked in clay pot',
       price: 260,
-      image: '/veg/veg-handi.jpg',
-      fallback: '🍲',
-      rating: 4.5,
-      cookTime: '25 min'
+      image: 'public/veg/veg-handi.jpg',
+      fallback: '🍯',
+      rating: 4.3,
+      cookTime: '22 min'
     }
   ]
 
@@ -226,7 +226,18 @@ function Veg() {
         const data = await dishService.getDishesByCategory('veg')
         console.log('Successfully fetched veg dishes:', data)
         if (data && data.length > 0) {
-          setVegDishes(data)
+          // Transform backend data to match frontend format
+          const transformedData = data.map(dish => ({
+            id: dish.id,
+            name: dish.name,
+            description: dish.description,
+            price: dish.price,
+            image: dish.imageUrl ? dish.imageUrl.replace('public/veg/', '/veg/') : '/veg/default.jpg',
+            fallback: '🥗',
+            rating: 4.5,
+            cookTime: '25 min'
+          }))
+          setVegDishes(transformedData)
         }
       } catch (error) {
         console.warn('Backend unavailable, using fallback data:', error.message)
@@ -254,18 +265,6 @@ function Veg() {
   const indexOfLastItem = currentPage * itemsPerPage
   const indexOfFirstItem = indexOfLastItem - itemsPerPage
   const currentItems = vegDishes.slice(indexOfFirstItem, indexOfLastItem)
-
-  // Use currentItems directly if from backend, else format static data
-  const formattedDishes = vegDishes.length > 0 ? currentItems : currentItems.map(dish => ({
-    id: dish.id,
-    name: dish.name,
-    description: dish.description,
-    price: dish.price,
-    image: dish.imageUrl || 'public/veg/default.jpg', // Assuming imageUrl from backend
-    fallback: '🥗',
-    rating: dish.rating || 4.5,
-    cookTime: dish.cookTime || '25 min'
-  }))
 
   // Pagination functions
   const nextPage = () => {
