@@ -71,9 +71,26 @@ public class DishServiceImpl implements DishService {
         dto.setDescription(dish.getDescription());
         dto.setPrice(dish.getPrice());
         dto.setCategory(dish.getCategory());
-        dto.setImageUrl(dish.getImageUrl());
+        dto.setImageUrl(normalizeImagePath(dish.getImageUrl()));
         dto.setAvailable(dish.isAvailable()); // ADDED
         return dto;
+    }
+
+    private String normalizeImagePath(String rawPath) {
+        if (rawPath == null || rawPath.isBlank()) {
+            return rawPath;
+        }
+
+        String sanitized = rawPath.trim();
+        if (sanitized.startsWith("public/")) {
+            sanitized = sanitized.substring("public".length());
+        }
+
+        if (!sanitized.startsWith("/")) {
+            sanitized = "/" + sanitized;
+        }
+
+        return sanitized.replace("//", "/");
     }
 
     private Dish convertToEntity(DishDTO dto) {
