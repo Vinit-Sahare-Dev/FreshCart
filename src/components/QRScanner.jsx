@@ -198,7 +198,7 @@ const QRScanner = ({ totalAmount, onClose, onPaymentSuccess }) => {
                     <div className="status-icon">📱</div>
                     <p>Waiting for payment scan...</p>
                     <button className="simulate-payment-btn" onClick={simulatePayment}>
-                      Simulate Payment (Demo)
+                      Checkout
                     </button>
                   </div>
                 )}

@@ -1,17 +1,17 @@
 package com.example.hotel.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "dishes")
+@Document(collection = "dishes")
 public class Dish {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @NotBlank
     private String name;
@@ -28,7 +28,7 @@ public class Dish {
 
     private boolean available = true;
 
-    // Default Constructor - REQUIRED by JPA
+    // Default Constructor - REQUIRED by MongoDB
     public Dish() {
     }
 
@@ -43,11 +43,11 @@ public class Dish {
     }
 
     // Getters and setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

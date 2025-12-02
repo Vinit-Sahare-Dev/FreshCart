@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class DishDTO {
 
-    private Long id;
+    private String id;
     private String name;
     private String description;
     private BigDecimal price;
@@ -12,11 +12,11 @@ public class DishDTO {
     private String category;
     private boolean available;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

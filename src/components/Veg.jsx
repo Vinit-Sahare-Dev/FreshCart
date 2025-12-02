@@ -199,8 +199,8 @@ function Veg() {
       name: 'Mushroom Matar',
       description: 'Mushrooms and peas in creamy gravy',
       price: 230,
-      image: '/veg/mushroom-matar.jpg', // Changed from .svg to .jpg
-      fallback: '🍄',
+      image: '/veg/mushroom-matar.jpg',
+      fallback: '/veg/default.jpg',
       rating: 4.4,
       cookTime: '20 min'
     },
@@ -209,8 +209,8 @@ function Veg() {
       name: 'Vegetable Handi',
       description: 'Mixed vegetables cooked in clay pot',
       price: 260,
-      image: 'public/veg/veg-handi.jpg',
-      fallback: '🍯',
+      image: '/veg/veg-handi.jpg',
+      fallback: '/veg/default.jpg',
       rating: 4.3,
       cookTime: '22 min'
     }
